@@ -19,7 +19,9 @@
   "type": "module",
   "scripts": {
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "version": "changeset version",
+    "release": "changeset tag"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
