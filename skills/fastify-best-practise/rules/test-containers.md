@@ -32,26 +32,24 @@ process.env.DATABASE_URL = "postgresql://user:pass@shared-db.example.com:5432/my
 
 ```ts
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
-import { drizzle } from "drizzle-orm/node-postgres";
-import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { Pool } from "pg";
-import * as schema from "../../src/db/schema.js";
+import pg from "pg";
+import { runMigrations } from "../../src/db/migrate.js";
 
 export async function startTestDatabase() {
   const container = await new PostgreSqlContainer("postgres:16-alpine").start();
-
-  const pool = new Pool({ connectionString: container.getConnectionUri() });
-  const db = drizzle(pool, { schema });
+  const connectionUri = container.getConnectionUri();
 
   // Apply all migrations so the schema matches production
-  await migrate(db, { migrationsFolder: "./drizzle" });
+  await runMigrations(connectionUri);
+
+  const pool = new pg.Pool({ connectionString: connectionUri });
 
   async function stop() {
     await pool.end();
     await container.stop();
   }
 
-  return { db, pool, connectionUri: container.getConnectionUri(), stop };
+  return { pool, connectionUri, stop };
 }
 ```
 
@@ -64,13 +62,13 @@ import { buildServer } from "../../src/server.js";
 import { startTestDatabase } from "./db.js";
 
 export async function createIntegrationServer() {
-  const { db, stop } = await startTestDatabase();
+  const { pool, stop } = await startTestDatabase();
 
   // Override the db plugin by pre-decorating before registration
   const server = buildServer({ logger: false });
 
-  // Replace the db decorator with our test instance
-  server.decorate("db", db);
+  // Replace the db decorator with our test pool
+  server.decorate("db", pool);
 
   await server.ready();
 
@@ -90,6 +88,10 @@ Alternatively, pass the database URL via environment variable so the real `db` p
 export async function createIntegrationServer() {
   const container = await new PostgreSqlContainer("postgres:16-alpine").start();
   process.env.DATABASE_URL = container.getConnectionUri();
+
+  // Migrations must run before the server starts
+  const { runMigrations } = await import("../../src/db/migrate.js");
+  await runMigrations(container.getConnectionUri());
 
   const server = buildServer({ logger: false });
   await server.ready();

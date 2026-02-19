@@ -36,18 +36,15 @@ fastify.post("/users", async (request, reply) => {
   }
 
   const existing = await fastify.db.query(
-    "SELECT id FROM users WHERE email = $1",
-    [email],
+    `SELECT id FROM users WHERE email = '${email}'`,  // SQL injection risk
   );
   if (existing.rows.length > 0) {
     reply.status(409);
     return { error: "Email already registered" };
   }
 
-  const hashed = await hashPassword(request.body.password);
   const { rows } = await fastify.db.query(
-    "INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email",
-    [name.trim(), email.toLowerCase(), hashed],
+    `INSERT INTO users (name, email) VALUES ('${name}', '${email}') RETURNING id, name, email`,
   );
 
   reply.status(201);
@@ -61,7 +58,8 @@ fastify.post("/users", async (request, reply) => {
 
 ```ts
 import createError from "@fastify/error";
-import type { Pool } from "pg";
+import SQL from "@nearform/sql";
+import type pg from "pg";
 
 export interface User {
   id: string;
@@ -82,30 +80,30 @@ const EmailAlreadyRegisteredError = createError(
 );
 
 export async function createUser(
-  db: Pool,
+  db: pg.Pool,
   input: CreateUserInput,
 ): Promise<User> {
   const { name, email, password } = input;
 
-  const existing = await db.query(
-    "SELECT id FROM users WHERE email = $1",
-    [email.toLowerCase()],
+  const { rows: existing } = await db.query(
+    SQL`SELECT id FROM users WHERE email = ${email.toLowerCase()}`,
   );
-  if (existing.rows.length > 0) {
+  if (existing.length > 0) {
     throw new EmailAlreadyRegisteredError(email);
   }
 
   const hashed = await hashPassword(password);
-  const { rows } = await db.query<User>(
-    "INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email",
-    [name.trim(), email.toLowerCase(), hashed],
-  );
+  const { rows } = await db.query<User>(SQL`
+    INSERT INTO users (name, email, password_hash)
+    VALUES (${name.trim()}, ${email.toLowerCase()}, ${hashed})
+    RETURNING id, name, email
+  `);
   return rows[0];
 }
 
-export async function listUsers(db: Pool): Promise<User[]> {
+export async function listUsers(db: pg.Pool): Promise<User[]> {
   const { rows } = await db.query<User>(
-    "SELECT id, name, email FROM users ORDER BY created_at DESC",
+    SQL`SELECT id, name, email FROM users ORDER BY created_at DESC`,
   );
   return rows;
 }
@@ -166,19 +164,22 @@ export default async function userRoutes(fastify: FastifyInstance) {
 
 ### Inject Dependencies Explicitly
 
-Pass dependencies (database, config, external clients) as function arguments rather than importing global singletons. This keeps service functions pure and easy to test:
+Pass dependencies (database pool, config, external clients) as function arguments rather than importing global singletons. This keeps service functions pure and easy to test:
 
 ```ts
 // WRONG: service imports a global singleton
-import { db } from "../db/client.js";
+import { pool } from "../db/client.js";
 
 export async function listUsers() {
-  return db.query("SELECT * FROM users");  // hidden dependency
+  return pool.query(SQL`SELECT * FROM users`);  // hidden dependency
 }
 
 // CORRECT: dependency passed as argument
-export async function listUsers(db: Pool) {
-  const { rows } = await db.query("SELECT * FROM users");
+import SQL from "@nearform/sql";
+import type pg from "pg";
+
+export async function listUsers(db: pg.Pool) {
+  const { rows } = await db.query(SQL`SELECT * FROM users`);
   return rows;
 }
 ```

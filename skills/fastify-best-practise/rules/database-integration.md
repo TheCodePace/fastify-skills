@@ -2,16 +2,25 @@
 title: Database Integration
 impact: HIGH
 impactDescription: Registering the database client as a Fastify plugin ensures a single shared connection pool and clean lifecycle management
-tags: database, plugin, postgres, drizzle, prisma, lifecycle
+tags: database, plugin, postgres, pg, nearform-sql, lifecycle
 ---
 
 ## Database Integration
 
-Integrate your database client as a Fastify plugin using `fastify-plugin`. This gives every route handler access to the client through `fastify.db` (or a similar decorator) while keeping connection lifecycle management (connect on startup, disconnect on shutdown) tied to the server lifecycle.
+Integrate your `pg` connection pool as a Fastify plugin using `fastify-plugin`. This gives every route handler access to the pool through `fastify.db` while keeping connection lifecycle management (connect on startup, disconnect on shutdown) tied to the server lifecycle.
 
-### Register the Database Client as a Plugin
+Use `@nearform/sql` tagged template literals to build all queries. This prevents SQL injection by automatically parameterizing every interpolated value, and composes sub-queries safely without manual `$1` / `$2` index bookkeeping.
 
-**Incorrect (creating a database client directly inside a route handler):**
+### Install
+
+```bash
+npm install pg @nearform/sql fastify-plugin
+npm install --save-dev @types/pg
+```
+
+### Register the Pool as a Plugin
+
+**Incorrect (creating a pool directly inside a route handler):**
 
 ```ts
 import { Pool } from "pg";
@@ -30,17 +39,17 @@ server.get("/users", async (request, reply) => {
 
 ```ts
 import fp from "fastify-plugin";
-import { Pool } from "pg";
+import pg from "pg";
 import type { FastifyInstance } from "fastify";
 
 declare module "fastify" {
   interface FastifyInstance {
-    db: Pool;
+    db: pg.Pool;
   }
 }
 
 async function dbPlugin(fastify: FastifyInstance) {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 
   // Verify connectivity at startup
   await pool.query("SELECT 1");
@@ -68,112 +77,93 @@ export function buildServer() {
 }
 ```
 
+### Write Queries with `@nearform/sql`
+
+`@nearform/sql` turns a tagged template literal into a parameterized query object (`{ text, values }`) that `pg` accepts directly. Every interpolated value becomes a positional parameter — user input can never end up in the query string.
+
+**Incorrect (string concatenation or untagged template literal):**
+
+```ts
+// WRONG: SQL injection risk — user input in the query string
+const { rows } = await fastify.db.query(
+  `SELECT * FROM users WHERE email = '${email}'`,
+);
+```
+
+**Correct (tagged template literal with `@nearform/sql`):**
+
 `src/routes/users/index.ts`
 
 ```ts
 import type { FastifyInstance } from "fastify";
+import SQL from "@nearform/sql";
 
 export default async function userRoutes(fastify: FastifyInstance) {
+  // List all users
   fastify.get("/", async () => {
-    const { rows } = await fastify.db.query("SELECT * FROM users");
+    const { rows } = await fastify.db.query(
+      SQL`SELECT id, name, email FROM users ORDER BY created_at DESC`,
+    );
     return rows;
   });
-}
-```
 
-### Using Drizzle ORM
-
-`src/plugins/db.ts`
-
-```ts
-import fp from "fastify-plugin";
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
-import * as schema from "../db/schema.js";
-import type { FastifyInstance } from "fastify";
-import type { NodePgDatabase } from "drizzle-orm/node-postgres";
-
-declare module "fastify" {
-  interface FastifyInstance {
-    db: NodePgDatabase<typeof schema>;
-  }
-}
-
-async function dbPlugin(fastify: FastifyInstance) {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  const db = drizzle(pool, { schema });
-
-  fastify.decorate("db", db);
-
-  fastify.addHook("onClose", async () => {
-    await pool.end();
-  });
-}
-
-export default fp(dbPlugin, { name: "db" });
-```
-
-`src/routes/users/index.ts`
-
-```ts
-import type { FastifyInstance } from "fastify";
-import { eq } from "drizzle-orm";
-import { users } from "../../db/schema.js";
-
-export default async function userRoutes(fastify: FastifyInstance) {
-  fastify.get("/", async () => {
-    return fastify.db.select().from(users);
-  });
-
+  // Get a single user — id is parameterized automatically
   fastify.get("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
-    const [user] = await fastify.db
-      .select()
-      .from(users)
-      .where(eq(users.id, id));
-    return user ?? reply.status(404).send({ message: "Not found" });
+    const { rows } = await fastify.db.query(
+      SQL`SELECT id, name, email FROM users WHERE id = ${id}`,
+    );
+    if (!rows[0]) return reply.status(404).send({ message: "Not found" });
+    return rows[0];
+  });
+
+  // Create a user
+  fastify.post("/", async (request, reply) => {
+    const { name, email } = request.body as { name: string; email: string };
+    const { rows } = await fastify.db.query(SQL`
+      INSERT INTO users (name, email)
+      VALUES (${name.trim()}, ${email.toLowerCase()})
+      RETURNING id, name, email
+    `);
+    reply.status(201);
+    return rows[0];
   });
 }
 ```
 
-### Using Prisma
+### Compose Queries with `@nearform/sql`
 
-`src/plugins/db.ts`
+`@nearform/sql` supports safe composition of sub-queries and conditional clauses:
 
 ```ts
-import fp from "fastify-plugin";
-import { PrismaClient } from "@prisma/client";
-import type { FastifyInstance } from "fastify";
+import SQL from "@nearform/sql";
+import type pg from "pg";
 
-declare module "fastify" {
-  interface FastifyInstance {
-    prisma: PrismaClient;
+interface UserFilter {
+  email?: string;
+  name?: string;
+}
+
+export async function findUsers(db: pg.Pool, filter: UserFilter) {
+  // Build optional WHERE clauses
+  const conditions = SQL``;
+
+  if (filter.email) {
+    conditions.append(SQL`AND email = ${filter.email}`);
   }
-}
+  if (filter.name) {
+    conditions.append(SQL`AND name ILIKE ${"%" + filter.name + "%"}`);
+  }
 
-async function prismaPlugin(fastify: FastifyInstance) {
-  const prisma = new PrismaClient();
-  await prisma.$connect();
+  const query = SQL`
+    SELECT id, name, email FROM users
+    WHERE deleted_at IS NULL
+    ${conditions}
+    ORDER BY created_at DESC
+  `;
 
-  fastify.decorate("prisma", prisma);
-
-  fastify.addHook("onClose", async () => {
-    await prisma.$disconnect();
-  });
-}
-
-export default fp(prismaPlugin, { name: "prisma" });
-```
-
-`src/routes/users/index.ts`
-
-```ts
-import type { FastifyInstance } from "fastify";
-
-export default async function userRoutes(fastify: FastifyInstance) {
-  fastify.get("/", async () => {
-    return fastify.prisma.user.findMany();
-  });
+  const { rows } = await db.query(query);
+  return rows;
 }
 ```
 
@@ -207,4 +197,4 @@ export default fp(configPlugin, { name: "config" });
 
 Register `configPlugin` before `dbPlugin` so `fastify.config.DATABASE_URL` is available when the pool is created.
 
-Reference: [Fastify Decorators](https://fastify.dev/docs/latest/Reference/Decorators/) | [Drizzle ORM](https://orm.drizzle.team/) | [Prisma](https://www.prisma.io/docs)
+Reference: [Fastify Decorators](https://fastify.dev/docs/latest/Reference/Decorators/) | [@nearform/sql](https://github.com/nearform/sql) | [node-postgres](https://node-postgres.com/)

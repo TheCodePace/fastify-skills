@@ -15,7 +15,8 @@ Service functions that follow the [clean-architecture](clean-architecture.md) pa
 
 ```ts
 import createError from "@fastify/error";
-import type { Pool } from "pg";
+import SQL from "@nearform/sql";
+import type pg from "pg";
 
 export interface User { id: string; name: string; email: string; }
 export interface CreateUserInput { name: string; email: string; password: string; }
@@ -26,18 +27,18 @@ const EmailAlreadyRegisteredError = createError(
   409,
 );
 
-export async function createUser(db: Pool, input: CreateUserInput): Promise<User> {
-  const existing = await db.query(
-    "SELECT id FROM users WHERE email = $1",
-    [input.email.toLowerCase()],
+export async function createUser(db: pg.Pool, input: CreateUserInput): Promise<User> {
+  const { rows: existing } = await db.query(
+    SQL`SELECT id FROM users WHERE email = ${input.email.toLowerCase()}`,
   );
-  if (existing.rows.length > 0) {
+  if (existing.length > 0) {
     throw new EmailAlreadyRegisteredError(input.email);
   }
-  const { rows } = await db.query<User>(
-    "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id, name, email",
-    [input.name.trim(), input.email.toLowerCase()],
-  );
+  const { rows } = await db.query<User>(SQL`
+    INSERT INTO users (name, email)
+    VALUES (${input.name.trim()}, ${input.email.toLowerCase()})
+    RETURNING id, name, email
+  `);
   return rows[0];
 }
 ```
@@ -59,13 +60,13 @@ const res = await server.inject({ method: "POST", url: "/users", payload: { ... 
 ```ts
 import { describe, it, expect, vi } from "vitest";
 import { createUser } from "../../src/services/users.js";
-import type { Pool } from "pg";
+import type pg from "pg";
 
-function makeMockDb(overrides: Partial<Pool> = {}): Pool {
+function makeMockDb(overrides: Partial<pg.Pool> = {}): pg.Pool {
   return {
     query: vi.fn(),
     ...overrides,
-  } as unknown as Pool;
+  } as unknown as pg.Pool;
 }
 
 describe("createUser", () => {
@@ -110,9 +111,9 @@ describe("createUser", () => {
 
     await createUser(db, { name: "Alice", email: "ALICE@EXAMPLE.COM", password: "pass" });
 
-    // Assert the INSERT was called with a lower-cased email
-    const insertCall = queryMock.mock.calls[1];
-    expect(insertCall[1]).toContain("alice@example.com");
+    // @nearform/sql builds a parameterized query object — inspect values, not the text
+    const insertCall = queryMock.mock.calls[1][0]; // SqlStatement passed to pool.query()
+    expect(insertCall.values).toContain("alice@example.com");
   });
 });
 ```
@@ -120,10 +121,10 @@ describe("createUser", () => {
 **Correct — node:test:**
 
 ```ts
-import { describe, it, mock, before } from "node:test";
+import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { createUser } from "../../src/services/users.js";
-import type { Pool } from "pg";
+import type pg from "pg";
 
 describe("createUser", () => {
   it("returns the new user on success", async () => {
@@ -134,7 +135,7 @@ describe("createUser", () => {
         if (callCount === 1) return { rows: [] };                   // SELECT
         return { rows: [{ id: "u1", name: "Alice", email: "alice@example.com" }] }; // INSERT
       },
-    } as unknown as Pool;
+    } as unknown as pg.Pool;
 
     const user = await createUser(db, { name: "Alice", email: "alice@example.com", password: "s" });
     assert.deepStrictEqual(user, { id: "u1", name: "Alice", email: "alice@example.com" });
@@ -143,7 +144,7 @@ describe("createUser", () => {
   it("throws when email already exists", async () => {
     const db = {
       query: async () => ({ rows: [{ id: "existing" }] }),
-    } as unknown as Pool;
+    } as unknown as pg.Pool;
 
     await assert.rejects(
       () => createUser(db, { name: "Bob", email: "dup@example.com", password: "s" }),

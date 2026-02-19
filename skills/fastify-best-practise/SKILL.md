@@ -29,8 +29,8 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Hooks & Lifecycle       | [hooks-lifecycle.md](rules/hooks-lifecycle.md)               | MEDIUM     | Request lifecycle hooks for auth, logging, rate limiting                      |
 | Testing                 | [testing.md](rules/testing.md)                               | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                   |
 | TypeScript              | [typescript-integration.md](rules/typescript-integration.md) | MEDIUM     | Type providers, module augmentation, typed decorators                         |
-| Database Integration    | [database-integration.md](rules/database-integration.md)     | HIGH       | Register pg/Drizzle/Prisma as a Fastify plugin with lifecycle management      |
-| Database Migrations     | [database-migrations.md](rules/database-migrations.md)       | HIGH       | Run Drizzle/Prisma migrations at startup; never modify applied files          |
+| Database Integration    | [database-integration.md](rules/database-integration.md)     | HIGH       | Register a `pg` pool as a Fastify plugin; use `@nearform/sql` for safe queries |
+| Database Migrations     | [database-migrations.md](rules/database-migrations.md)       | HIGH       | Run Postgrator SQL migrations at startup; never modify applied files           |
 | Test Containers         | [test-containers.md](rules/test-containers.md)               | HIGH       | Spin up real Postgres containers with Testcontainers for integration tests    |
 | Clean Architecture      | [clean-architecture.md](rules/clean-architecture.md)         | HIGH       | Pure service-layer functions + thin route handlers; explicit dependency injection |
 | Unit Testing            | [unit-testing.md](rules/unit-testing.md)                     | HIGH       | Unit-test service functions in isolation with mock database stubs             |
@@ -73,11 +73,10 @@ src/
     users.ts
     posts.ts
   db/
-    schema.ts       # Drizzle/Prisma schema (source of truth)
-    migrate.ts      # runMigrations() helper
+    migrate.ts      # runMigrations() helper (uses Postgrator)
   server.ts         # buildServer() with autoload registration
   app.ts            # Entry point — runMigrations() then server.listen()
-drizzle/            # Generated migration SQL files (committed to git)
+migrations/         # Raw SQL files (committed to git): 001.do.*.sql, 001.undo.*.sql
 test/
   services/
     users.test.ts   # Unit tests — pure functions, mock db
@@ -99,7 +98,7 @@ When applying these best practices, mention which rule(s) you followed:
 > - **Encapsulation**: Shared plugins use `fastify-plugin`, routes stay scoped
 > - **Error handling**: Custom error handler with `@fastify/error`
 > - **Database**: Client registered as a plugin with `fastify-plugin` for shared pool and lifecycle management
-> - **Migrations**: Applied via `drizzle-kit migrate` / `prisma migrate deploy` before server starts
+> - **Migrations**: Applied via Postgrator (`runMigrations()`) before server starts; raw SQL files tracked in git
 > - **Clean architecture**: Business logic in pure service functions; route handlers stay thin
 > - **Unit tests**: Service functions tested in isolation with mock db stubs
 > - **Integration tests**: Real Postgres container via Testcontainers
