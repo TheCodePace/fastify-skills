@@ -1,0 +1,25 @@
+{
+  "name": "@thecodepace/fastify-skills",
+  "version": "0.0.0",
+  "description": "A collection of skills for AI coding agents. Skills are packaged instructions and scripts that extend agent capabilities.",
+  "keywords": [
+    "fastify",
+    "skills"
+  ],
+  "homepage": "https://github.com/TheCodePace/fastify-skills#readme",
+  "bugs": {
+    "url": "https://github.com/TheCodePace/fastify-skills/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheCodePace/fastify-skills.git"
+  },
+  "license": "MIT",
+  "author": "The Red Code",
+  "type": "module",
+  "scripts": {
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.8"
+  }
+}
