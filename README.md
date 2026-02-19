@@ -26,7 +26,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 ## Installation
 
 ```bash
-npx skills add @TheCodePace/fastify-skills
+npx skills add @thecodepace/fastify-skills
 ```
 
 ## Usage
