@@ -1,6 +1,6 @@
 {
   "name": "@thecodepace/fastify-skills",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A collection of skills for AI coding agents. Skills are packaged instructions and scripts that extend agent capabilities.",
   "keywords": [
     "fastify",
