@@ -27,10 +27,15 @@ server.post("/data", async (request, reply) => {
 await server.listen(3000);
 ```
 
-**Correct (build function with options):**
+**Correct (build function with options and autoload):**
 
 ```ts
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import Fastify from "fastify";
+import autoload from "@fastify/autoload";
+
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 interface ServerOptions {
   logger?: boolean;
@@ -41,17 +46,21 @@ function buildServer(options: ServerOptions = {}) {
     logger: options.logger || false,
   });
 
-  server.get("/", async (request, reply) => {
-    // handle request
+  // Autoload shared plugins (use fastify-plugin inside each)
+  server.register(autoload, {
+    dir: path.join(__dirname, "plugins"),
   });
 
-  server.post("/data", async (request, reply) => {
-    // handle request
+  // Autoload routes (encapsulated, prefixes from folder names)
+  server.register(autoload, {
+    dir: path.join(__dirname, "routes"),
+    autoHooks: true,
+    cascadeHooks: true,
   });
 
   return server;
 }
 
 const server = buildServer({ logger: true });
-await server.listen(3000);
+await server.listen({ port: 3000 });
 ```
