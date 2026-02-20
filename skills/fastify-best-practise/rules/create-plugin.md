@@ -1,6 +1,6 @@
 ---
 title: Create Plugin for Reusable Functionality
-impact: LOW-MEDIUM
+impact: HIGH
 impactDescription: Encapsulate reusable functionality in a plugin to promote modularity and maintainability
 tags: plugins, modularity, maintainability
 ---
