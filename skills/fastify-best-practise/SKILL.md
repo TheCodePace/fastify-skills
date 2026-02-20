@@ -1,6 +1,6 @@
 ---
 name: fastify-best-practise
-description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, error handling, testing, and TypeScript integration. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
+description: Apply Fastify best practices for servers, plugins, routes, database integration, testing, and architecture patterns. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
 ---
 
 # Fastify Best Practices
@@ -29,6 +29,11 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Hooks & Lifecycle       | [hooks-lifecycle.md](rules/hooks-lifecycle.md)               | MEDIUM     | Request lifecycle hooks for auth, logging, rate limiting                      |
 | Testing                 | [testing.md](rules/testing.md)                               | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                   |
 | TypeScript              | [typescript-integration.md](rules/typescript-integration.md) | MEDIUM     | Type providers, module augmentation, typed decorators                         |
+| Database Integration    | [database-integration.md](rules/database-integration.md)     | HIGH       | Register a `pg` pool as a Fastify plugin; use `@nearform/sql` for safe queries |
+| Database Migrations     | [database-migrations.md](rules/database-migrations.md)       | HIGH       | Run Postgrator SQL migrations at startup; never modify applied files           |
+| Test Containers         | [test-containers.md](rules/test-containers.md)               | HIGH       | Spin up real Postgres containers with Testcontainers for integration tests    |
+| Clean Architecture      | [clean-architecture.md](rules/clean-architecture.md)         | HIGH       | Pure service-layer functions + thin route handlers; explicit dependency injection |
+| Unit Testing            | [unit-testing.md](rules/unit-testing.md)                     | HIGH       | Unit-test service functions in isolation with mock database stubs             |
 
 ## Usage
 
@@ -40,6 +45,10 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Error handling**: `error-handling.md`
 - **Auth/middleware**: `hooks-lifecycle.md`, `encapsulation.md`
 - **Writing tests**: `testing.md`, `create-server.md`
+- **Database setup**: `database-integration.md`, `database-migrations.md`
+- **Integration tests with a real DB**: `test-containers.md`, `testing.md`
+- **Clean separation of concerns**: `clean-architecture.md`, `unit-testing.md`
+- **Unit testing business logic**: `unit-testing.md`, `clean-architecture.md`
 
 ## Recommended Project Structure
 
@@ -48,25 +57,34 @@ Using `@fastify/autoload`, plugins and routes are loaded automatically from thei
 ```
 src/
   plugins/          # Autoloaded — shared plugins (use fastify-plugin)
-    db.ts
+    db.ts           # Database client (pg/Drizzle/Prisma) + lifecycle
     auth.ts
     config.ts
   routes/           # Autoloaded — encapsulated route plugins (NO fastify-plugin)
     _hooks.ts       # Global route hooks (with autoHooks: true)
     users/
-      index.ts      # → /users
+      index.ts      # → /users  (thin handler — calls services/users.ts)
       _hooks.ts     # Hooks for /users scope only
-      schema.ts
+      schema.ts     # Zod schemas
     posts/
       index.ts      # → /posts
       schema.ts
+  services/         # Pure business logic — no Fastify imports, injectable deps
+    users.ts
+    posts.ts
+  db/
+    migrate.ts      # runMigrations() helper (uses Postgrator)
   server.ts         # buildServer() with autoload registration
-  app.ts            # Entry point — calls buildServer() and listen()
+  app.ts            # Entry point — runMigrations() then server.listen()
+migrations/         # Raw SQL files (committed to git): 001.do.*.sql, 001.undo.*.sql
 test/
+  services/
+    users.test.ts   # Unit tests — pure functions, mock db
   routes/
-    users.test.ts
-    posts.test.ts
-  helpers.ts        # createTestServer() helper
+    users.test.ts   # Integration tests — inject() + real schema
+  helpers/
+    server.ts       # createTestServer() / createIntegrationServer()
+    db.ts           # startTestDatabase() via Testcontainers
 ```
 
 ## Present Results to User
@@ -79,6 +97,11 @@ When applying these best practices, mention which rule(s) you followed:
 > - **Zod validation**: Request/response schemas with type inference
 > - **Encapsulation**: Shared plugins use `fastify-plugin`, routes stay scoped
 > - **Error handling**: Custom error handler with `@fastify/error`
+> - **Database**: Client registered as a plugin with `fastify-plugin` for shared pool and lifecycle management
+> - **Migrations**: Applied via Postgrator (`runMigrations()`) before server starts; raw SQL files tracked in git
+> - **Clean architecture**: Business logic in pure service functions; route handlers stay thin
+> - **Unit tests**: Service functions tested in isolation with mock db stubs
+> - **Integration tests**: Real Postgres container via Testcontainers
 
 ## Reference
 
