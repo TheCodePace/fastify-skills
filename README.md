@@ -12,6 +12,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 
 | Rule                    | Impact     | Description                                                                |
 | ----------------------- | ---------- | -------------------------------------------------------------------------- |
+| Configuration           | HIGH       | Environment config, logger setup, security options, and graceful shutdown  |
 | Create Server           | LOW-MEDIUM | Use a `buildServer()` factory function for reusable, testable server setup |
 | Create Plugin           | LOW-MEDIUM | Encapsulate reusable functionality in plugins with `fastify-plugin`        |
 | Autoload                | HIGH       | Automatically load plugins and routes with `@fastify/autoload`             |
