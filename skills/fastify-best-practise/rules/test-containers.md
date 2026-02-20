@@ -23,7 +23,8 @@ Docker must be running on the test machine (locally and in CI).
 
 ```ts
 // WRONG: tests depend on external state — flaky, hard to reset, can't run in parallel
-process.env.DATABASE_URL = "postgresql://user:pass@shared-db.example.com:5432/mydb";
+process.env.DATABASE_URL =
+  "postgresql://user:pass@shared-db.example.com:5432/mydb";
 ```
 
 **Correct (isolated container per test suite):**
@@ -36,7 +37,7 @@ import pg from "pg";
 import { runMigrations } from "../../src/db/migrate.js";
 
 export async function startTestDatabase() {
-  const container = await new PostgreSqlContainer("postgres:16-alpine").start();
+  const container = await new PostgreSqlContainer("postgres:17-alpine").start();
   const connectionUri = container.getConnectionUri();
 
   // Apply all migrations so the schema matches production
@@ -86,7 +87,7 @@ Alternatively, pass the database URL via environment variable so the real `db` p
 
 ```ts
 export async function createIntegrationServer() {
-  const container = await new PostgreSqlContainer("postgres:16-alpine").start();
+  const container = await new PostgreSqlContainer("postgres:17-alpine").start();
   process.env.DATABASE_URL = container.getConnectionUri();
 
   // Migrations must run before the server starts

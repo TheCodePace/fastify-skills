@@ -26,6 +26,7 @@ Postgrator discovers migration files by name. Each file must follow the pattern:
 ```
 
 Examples:
+
 ```
 migrations/
   001.do.create-users-table.sql
@@ -106,10 +107,13 @@ export async function runMigrations(connectionString?: string) {
 import { buildServer } from "./server.js";
 import { runMigrations } from "./db/migrate.js";
 
-await runMigrations();        // ← run before listen()
+await runMigrations(); // ← run before listen()
 
 const server = buildServer();
-await server.listen({ port: Number(process.env.PORT ?? 3000), host: "0.0.0.0" });
+await server.listen({
+  port: Number(process.env.PORT ?? 3000),
+  host: "0.0.0.0",
+});
 ```
 
 ### Project Layout

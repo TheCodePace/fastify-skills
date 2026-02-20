@@ -85,9 +85,7 @@ export function buildServer() {
 
 ```ts
 // WRONG: SQL injection risk — user input in the query string
-const { rows } = await fastify.db.query(
-  `SELECT * FROM users WHERE email = '${email}'`,
-);
+const { rows } = await db.query(`SELECT * FROM users WHERE email = '${email}'`);
 ```
 
 **Correct (tagged template literal with `@nearform/sql`):**
@@ -95,39 +93,30 @@ const { rows } = await fastify.db.query(
 `src/routes/users/index.ts`
 
 ```ts
-import type { FastifyInstance } from "fastify";
 import SQL from "@nearform/sql";
+import type pg from "pg";
 
-export default async function userRoutes(fastify: FastifyInstance) {
-  // List all users
-  fastify.get("/", async () => {
-    const { rows } = await fastify.db.query(
-      SQL`SELECT id, name, email FROM users ORDER BY created_at DESC`,
-    );
-    return rows;
-  });
+function getUsers(db: pg.Pool) {
+  const { rows } = await db.query(
+    SQL`SELECT id, name, email FROM users ORDER BY created_at DESC`,
+  );
+  return rows;
+}
 
-  // Get a single user — id is parameterized automatically
-  fastify.get("/:id", async (request, reply) => {
-    const { id } = request.params as { id: string };
-    const { rows } = await fastify.db.query(
-      SQL`SELECT id, name, email FROM users WHERE id = ${id}`,
-    );
-    if (!rows[0]) return reply.status(404).send({ message: "Not found" });
-    return rows[0];
-  });
+function getUserById(db: pg.Pool, id: string) {
+  const { rows } = await db.query(
+    SQL`SELECT id, name, email FROM users WHERE id = ${id}`,
+  );
+  return rows[0];
+}
 
-  // Create a user
-  fastify.post("/", async (request, reply) => {
-    const { name, email } = request.body as { name: string; email: string };
-    const { rows } = await fastify.db.query(SQL`
-      INSERT INTO users (name, email)
-      VALUES (${name.trim()}, ${email.toLowerCase()})
-      RETURNING id, name, email
-    `);
-    reply.status(201);
-    return rows[0];
-  });
+function createUser(db: pg.Pool, user: { name: string; email: string }) {
+  const { rows } = await db.query(SQL`
+    INSERT INTO users (name, email)
+    VALUES (${user.name.trim()}, ${user.email.toLowerCase()})
+    RETURNING id, name, email
+  `);
+  return rows[0];
 }
 ```
 
@@ -178,7 +167,6 @@ import type { FastifyInstance } from "fastify";
 
 const EnvSchema = z.object({
   DATABASE_URL: z.string().url(),
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
 
 declare module "fastify" {

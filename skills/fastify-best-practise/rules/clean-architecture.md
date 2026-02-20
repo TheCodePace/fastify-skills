@@ -7,7 +7,7 @@ tags: architecture, separation-of-concerns, services, pure-functions, handlers
 
 ## Clean Architecture — Separation of Concerns
 
-Keep business logic in plain TypeScript functions (the *service layer*) and keep route handlers thin. Route handlers are responsible for parsing the request, calling a service function, and returning the response. This separation makes the logic independently testable, reusable, and framework-agnostic.
+Keep business logic in plain TypeScript functions (the _service layer_) and keep route handlers thin. Route handlers are responsible for parsing the request, calling a service function, and returning the response. This separation makes the logic independently testable, reusable, and framework-agnostic.
 
 ### The Three Layers
 
@@ -36,7 +36,7 @@ fastify.post("/users", async (request, reply) => {
   }
 
   const existing = await fastify.db.query(
-    `SELECT id FROM users WHERE email = '${email}'`,  // SQL injection risk
+    `SELECT id FROM users WHERE email = '${email}'`, // SQL injection risk
   );
   if (existing.rows.length > 0) {
     reply.status(409);
@@ -130,15 +130,11 @@ export const UserResponse = z.object({
 `src/routes/users/index.ts` — thin route handler
 
 ```ts
-import type { FastifyInstance } from "fastify";
-import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
+import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { CreateUserBody, UserResponse } from "./schema.js";
 import { createUser, listUsers } from "../../services/users.js";
 
-export default async function userRoutes(fastify: FastifyInstance) {
-  fastify.setValidatorCompiler(validatorCompiler);
-  fastify.setSerializerCompiler(serializerCompiler);
-
+const userRoutes: FastifyPluginAsyncZod = async function (fastify) => {
   fastify.get(
     "/",
     { schema: { response: { 200: UserResponse.array() } } },
@@ -171,7 +167,7 @@ Pass dependencies (database pool, config, external clients) as function argument
 import { pool } from "../db/client.js";
 
 export async function listUsers() {
-  return pool.query(SQL`SELECT * FROM users`);  // hidden dependency
+  return pool.query(SQL`SELECT * FROM users`); // hidden dependency
 }
 
 // CORRECT: dependency passed as argument
@@ -186,13 +182,13 @@ export async function listUsers(db: pg.Pool) {
 
 ### When to Put Logic in the Route vs the Service
 
-| Logic type                          | Where it lives         |
-| ----------------------------------- | ---------------------- |
-| Request parsing / response shaping  | Route handler          |
-| Input validation (schema)           | Zod schema + route     |
-| Business rules, domain invariants   | Service function       |
-| Database queries                    | Service function       |
-| HTTP status codes                   | Route handler          |
-| Auth checks (who can do this?)      | Hook or route handler  |
+| Logic type                         | Where it lives        |
+| ---------------------------------- | --------------------- |
+| Request parsing / response shaping | Route handler         |
+| Input validation (schema)          | Zod schema + route    |
+| Business rules, domain invariants  | Service function      |
+| Database queries                   | Service function      |
+| HTTP status codes                  | Route handler         |
+| Auth checks (who can do this?)     | Hook or route handler |
 
 Reference: [Fastify Routes](https://fastify.dev/docs/latest/Reference/Routes/) | [@fastify/error](https://github.com/fastify/fastify-error)
