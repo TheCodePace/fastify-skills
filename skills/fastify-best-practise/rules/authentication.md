@@ -44,7 +44,7 @@ npm install @fastify/jwt
 `src/plugins/jwt.ts`
 
 ```ts
-import { fp } from "fastify-plugin";
+import fp from "fastify-plugin";
 import fjwt from "@fastify/jwt";
 
 async function jwtPlugin(fastify) {
@@ -213,7 +213,7 @@ npm install @fastify/auth
 `src/plugins/auth.ts`
 
 ```ts
-import { fp } from "fastify-plugin";
+import fp from "fastify-plugin";
 import fauth from "@fastify/auth";
 
 async function authPlugin(fastify) {
