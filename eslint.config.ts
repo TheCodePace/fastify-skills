@@ -8,7 +8,10 @@ export default defineConfig([
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
     plugins: { tseslint, js },
-    languageOptions: { globals: globals.node },
+    languageOptions: {
+      globals: globals.node,
+      parser: tseslint.parser,
+    },
   },
   {
     files: ["**/*.md"],
