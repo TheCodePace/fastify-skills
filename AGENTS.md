@@ -6,6 +6,36 @@ This file provides guidance to AI coding agents (Claude Code, Cursor, Copilot, e
 
 A collection of skills for Claude.ai, Claude Code, Copilot, Cursor and all the AI coding agents enable to run Skill for working with fastify. Skills are packaged instructions and scripts that extend AI capabilities.
 
+## Existing Skills
+
+### fastify-best-practise
+
+Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, decorators, error handling, testing, and TypeScript integration.
+
+Rules are stored in `skills/fastify-best-practise/rules/`:
+
+| Rule                    | File                          | Impact     |
+| ----------------------- | ----------------------------- | ---------- |
+| Create Server           | `create-server.md`            | LOW-MEDIUM |
+| Create Plugin           | `create-plugin.md`            | LOW-MEDIUM |
+| Autoload                | `autoload.md`                 | HIGH       |
+| Route Best Practices    | `route-best-practices.md`     | MEDIUM     |
+| Schema Validation (Zod) | `schema-validation-zod.md`    | HIGH       |
+| Encapsulation           | `encapsulation.md`            | HIGH       |
+| Error Handling          | `error-handling.md`           | HIGH       |
+| Hooks & Lifecycle       | `hooks-lifecycle.md`          | MEDIUM     |
+| Testing                 | `testing.md`                  | HIGH       |
+| TypeScript              | `typescript-integration.md`   | MEDIUM     |
+| Decorators              | `decorators.md`               | MEDIUM     |
+
+When adding a new rule to this skill:
+
+1. Create the rule file in `skills/fastify-best-practise/rules/` following the `_template.md` format.
+2. Add a row to the rules table in `skills/fastify-best-practise/SKILL.md`.
+3. Add the rule to the relevant usage entries in `SKILL.md`.
+4. Update the rules table in `README.md`.
+5. Update the rules table in this file (`AGENTS.md`).
+
 ## Creating a New Skill
 
 ### Directory Structure
