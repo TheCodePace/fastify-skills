@@ -1,6 +1,6 @@
 ---
 name: fastify-best-practise
-description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, error handling, testing, and TypeScript integration. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
+description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, decorators, error handling, testing, and TypeScript integration. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
 ---
 
 # Fastify Best Practices
@@ -29,6 +29,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Hooks & Lifecycle       | [hooks-lifecycle.md](rules/hooks-lifecycle.md)               | MEDIUM     | Request lifecycle hooks for auth, logging, rate limiting                      |
 | Testing                 | [testing.md](rules/testing.md)                               | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                   |
 | TypeScript              | [typescript-integration.md](rules/typescript-integration.md) | MEDIUM     | Type providers, module augmentation, typed decorators                         |
+| Decorators              | [decorators.md](rules/decorators.md)                         | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
 
 ## Usage
 
@@ -39,6 +40,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Adding shared services**: `create-plugin.md`, `autoload.md`, `encapsulation.md`
 - **Error handling**: `error-handling.md`
 - **Auth/middleware**: `hooks-lifecycle.md`, `encapsulation.md`
+- **Custom decorators**: `decorators.md`, `typescript-integration.md`
 - **Writing tests**: `testing.md`, `create-server.md`
 
 ## Recommended Project Structure
