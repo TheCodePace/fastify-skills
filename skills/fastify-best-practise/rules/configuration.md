@@ -2,14 +2,14 @@
 title: Configuration Best Practices
 impact: HIGH
 impactDescription: Proper configuration improves security, reliability, and maintainability across environments
-tags: configuration, environment, env, security, logger, options
+tags: configuration, environment, env, security, logger, options, zod
 ---
 
 ## Configuration Best Practices
 
-Fastify's factory function accepts an options object that controls server behavior. Managing these options properly — along with environment-specific configuration — is essential for secure, production-ready applications.
+Fastify's factory function accepts an options object that controls server behavior. Managing these options properly — along with environment-specific configuration using Zod — is essential for secure, production-ready applications.
 
-### Use `@fastify/env` for Environment Configuration
+### Define an Environment Schema with Zod
 
 **Incorrect (reading `process.env` directly throughout the app):**
 
@@ -28,66 +28,53 @@ server.get("/", async (request, reply) => {
 });
 ```
 
-**Correct (validate and centralize config with `@fastify/env`):**
+**Correct (validate and centralize config with Zod):**
 
 ```bash
-npm install @fastify/env
+npm install zod
+```
+
+`src/schema/env.ts`
+
+```ts
+import { z } from "zod";
+
+export const envSchema = z.object({
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
+  PORT: z.coerce.number().default(3000),
+  HOST: z.string().default("0.0.0.0"),
+  DATABASE_URL: z.string().url(),
+  LOG_LEVEL: z
+    .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
+    .default("info"),
+});
+
+export type Env = z.infer<typeof envSchema>;
 ```
 
 `src/plugins/config.ts`
 
 ```ts
 import fp from "fastify-plugin";
-import fastifyEnv from "@fastify/env";
 import type { FastifyInstance } from "fastify";
+import { envSchema, type Env } from "../schema/env.js";
 
-const schema = {
-  type: "object",
-  required: ["PORT", "DATABASE_URL"],
-  properties: {
-    NODE_ENV: {
-      type: "string",
-      default: "development",
-    },
-    PORT: {
-      type: "number",
-      default: 3000,
-    },
-    DATABASE_URL: {
-      type: "string",
-    },
-    LOG_LEVEL: {
-      type: "string",
-      default: "info",
-    },
-  },
-};
+declare module "fastify" {
+  interface FastifyInstance {
+    config: Env;
+  }
+}
 
 async function configPlugin(fastify: FastifyInstance) {
-  await fastify.register(fastifyEnv, {
-    confKey: "config",
-    schema,
-    dotenv: true,
-  });
+  const config = envSchema.parse(process.env);
+  fastify.decorate("config", config);
 }
 
 export default fp(configPlugin, {
   name: "config-plugin",
 });
-```
-
-```ts
-// Type your config with module augmentation
-declare module "fastify" {
-  interface FastifyInstance {
-    config: {
-      NODE_ENV: string;
-      PORT: number;
-      DATABASE_URL: string;
-      LOG_LEVEL: string;
-    };
-  }
-}
 ```
 
 ### Configure the Logger Properly
@@ -105,10 +92,13 @@ server.get("/", async (request, reply) => {
 });
 ```
 
-**Correct (use Pino options for environment-appropriate logging):**
+**Correct (use Pino options for environment-appropriate logging with the env schema):**
 
 ```ts
 import Fastify from "fastify";
+import { envSchema } from "./schema/env.js";
+
+const config = envSchema.parse(process.env);
 
 const envToLogger: Record<string, object> = {
   development: {
@@ -122,17 +112,15 @@ const envToLogger: Record<string, object> = {
     },
   },
   production: {
-    level: "info",
+    level: config.LOG_LEVEL,
   },
   test: {
     level: "silent",
   },
 };
 
-const environment = process.env.NODE_ENV ?? "development";
-
 const server = Fastify({
-  logger: envToLogger[environment] ?? true,
+  logger: envToLogger[config.NODE_ENV] ?? true,
 });
 ```
 
@@ -148,28 +136,37 @@ import Fastify from "fastify";
 const server = Fastify();
 ```
 
-**Correct (explicitly configure security-relevant options):**
+**Correct (use a `buildServer` function with explicit security options):**
 
 ```ts
 import Fastify from "fastify";
+import type { Env } from "./schema/env.js";
 
-const server = Fastify({
-  // Keep prototype poisoning protection at 'error' (default)
-  onProtoPoisoning: "error",
-  onConstructorPoisoning: "error",
+interface BuildServerOptions {
+  config: Env;
+}
 
-  // Set a request timeout to protect against slow requests (DoS)
-  requestTimeout: 120_000, // 2 minutes
+function buildServer({ config }: BuildServerOptions) {
+  const server = Fastify({
+    // Keep prototype poisoning protection at 'error' (default)
+    onProtoPoisoning: "error",
+    onConstructorPoisoning: "error",
 
-  // Limit payload size to prevent abuse
-  bodyLimit: 1_048_576, // 1 MiB (default), adjust as needed
+    // Set a request timeout to protect against slow requests (DoS)
+    requestTimeout: 120_000, // 2 minutes
 
-  // Return 503 when server is closing for graceful shutdown
-  return503OnClosing: true,
+    // Limit payload size to prevent abuse
+    bodyLimit: 1_048_576, // 1 MiB (default), adjust as needed
 
-  // Close idle connections on shutdown for clean exits
-  forceCloseConnections: "idle",
-});
+    // Return 503 when server is closing for graceful shutdown
+    return503OnClosing: true,
+
+    // Close idle connections on shutdown for clean exits
+    forceCloseConnections: "idle",
+  });
+
+  return server;
+}
 ```
 
 ### Configure `trustProxy` When Behind a Reverse Proxy
@@ -212,49 +209,27 @@ server.get("/", async (request, reply) => {
 > For more control, use a specific IP, CIDR range, or count instead of `true`:
 > `trustProxy: '127.0.0.1'` or `trustProxy: 1`.
 
-### Use `pluginTimeout` for Debugging Slow Plugins
-
-**Incorrect (ignoring plugin timeout during development):**
-
-```ts
-import Fastify from "fastify";
-
-// Default pluginTimeout is 10000ms — may cause confusing
-// ERR_AVVIO_PLUGIN_TIMEOUT errors if a plugin takes too long
-const server = Fastify();
-```
-
-**Correct (increase timeout for known slow plugins in development):**
-
-```ts
-import Fastify from "fastify";
-
-const server = Fastify({
-  // Increase plugin loading timeout in development
-  // when dealing with slow database connections, etc.
-  pluginTimeout: process.env.NODE_ENV === "development" ? 60_000 : 10_000,
-});
-```
-
 ### Use the `listen` Options Correctly
 
 **Incorrect (listening on default without considering deployment):**
 
 ```ts
-const server = buildServer();
+const server = buildServer({ config });
 await server.listen({ port: 3000 });
 // Listens on localhost — won't work in Docker containers
 ```
 
-**Correct (bind to `0.0.0.0` for containerized environments):**
+**Correct (use the parsed env config for host and port):**
 
 ```ts
-const server = buildServer();
+import { envSchema } from "./schema/env.js";
+
+const config = envSchema.parse(process.env);
+const server = buildServer({ config });
 
 await server.listen({
-  port: Number(process.env.PORT) || 3000,
-  // Use 0.0.0.0 in Docker/containers, localhost for local dev
-  host: process.env.HOST || "0.0.0.0",
+  port: config.PORT,
+  host: config.HOST,
 });
 ```
 
@@ -262,11 +237,34 @@ await server.listen({
 
 **Correct (combine all configuration best practices):**
 
+`src/schema/env.ts`
+
+```ts
+import { z } from "zod";
+
+export const envSchema = z.object({
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
+  PORT: z.coerce.number().default(3000),
+  HOST: z.string().default("0.0.0.0"),
+  DATABASE_URL: z.string().url(),
+  LOG_LEVEL: z
+    .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
+    .default("info"),
+});
+
+export type Env = z.infer<typeof envSchema>;
+```
+
+`src/server.ts`
+
 ```ts
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Fastify from "fastify";
 import autoload from "@fastify/autoload";
+import type { Env } from "./schema/env.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -289,22 +287,19 @@ const envToLogger: Record<string, object> = {
   },
 };
 
-interface BuildServerOptions {
-  logger?: boolean | object;
+export interface BuildServerOptions {
+  config: Env;
   trustProxy?: boolean | string | number;
 }
 
-function buildServer(options: BuildServerOptions = {}) {
-  const environment = process.env.NODE_ENV ?? "development";
-
+export function buildServer({ config, trustProxy }: BuildServerOptions) {
   const server = Fastify({
-    logger: options.logger ?? envToLogger[environment] ?? true,
-    trustProxy: options.trustProxy ?? false,
+    logger: envToLogger[config.NODE_ENV] ?? true,
+    trustProxy: trustProxy ?? false,
     requestTimeout: 120_000,
     bodyLimit: 1_048_576,
     return503OnClosing: true,
     forceCloseConnections: "idle",
-    pluginTimeout: environment === "development" ? 60_000 : 10_000,
   });
 
   // Autoload plugins (config, db, auth — all use fastify-plugin)
@@ -321,35 +316,69 @@ function buildServer(options: BuildServerOptions = {}) {
 
   return server;
 }
-
-export default buildServer;
 ```
 
-### Handle Graceful Shutdown
+### Handle Graceful Shutdown with `close-with-grace`
 
-**Correct (listen for termination signals and close cleanly):**
+Use `close-with-grace` to handle process signals and errors in a consistent way. It listens for `SIGINT`, `SIGTERM`, uncaught exceptions, and unhandled rejections automatically.
+
+```bash
+npm install close-with-grace
+```
+
+**Correct (use `close-with-grace` in the app entry point):**
 
 `src/app.ts`
 
 ```ts
-import buildServer from "./server.js";
+import closeWithGrace from "close-with-grace";
+import { envSchema } from "./schema/env.js";
+import { buildServer } from "./server.js";
 
-const server = buildServer();
+const config = envSchema.parse(process.env);
+const server = buildServer({ config });
 
-const signals: NodeJS.Signals[] = ["SIGINT", "SIGTERM"];
-
-for (const signal of signals) {
-  process.on(signal, async () => {
-    server.log.info(`Received ${signal}, shutting down gracefully`);
-    await server.close();
-    process.exit(0);
-  });
-}
+closeWithGrace({ delay: 10_000 }, async ({ signal, err }) => {
+  if (err) {
+    server.log.error({ err }, "server closing with error");
+  } else {
+    server.log.info(`${signal} received, server closing`);
+  }
+  await server.close();
+});
 
 await server.listen({
-  port: Number(process.env.PORT) || 3000,
-  host: process.env.HOST || "0.0.0.0",
+  port: config.PORT,
+  host: config.HOST,
 });
 ```
 
-Reference: [Fastify Server Options](https://fastify.dev/docs/latest/Reference/Server/) | [@fastify/env](https://github.com/fastify/fastify-env)
+**Correct (handle cleanup in a plugin with `onClose` hook):**
+
+`src/plugins/db.ts`
+
+```ts
+import fp from "fastify-plugin";
+import type { FastifyInstance } from "fastify";
+
+async function dbPlugin(fastify: FastifyInstance) {
+  const pool = createPool(fastify.config.DATABASE_URL);
+
+  fastify.decorate("db", pool);
+
+  // Clean up the connection pool when the server closes
+  fastify.addHook("onClose", async () => {
+    fastify.log.info("closing database connection pool");
+    await pool.end();
+  });
+}
+
+export default fp(dbPlugin, {
+  name: "db-plugin",
+  dependencies: ["config-plugin"],
+});
+```
+
+When `server.close()` is called by `close-with-grace`, Fastify triggers all registered `onClose` hooks — ensuring plugins clean up their resources (database connections, cache clients, etc.) in the correct order.
+
+Reference: [Fastify Server Options](https://fastify.dev/docs/latest/Reference/Server/) | [close-with-grace](https://github.com/mcollina/close-with-grace)
