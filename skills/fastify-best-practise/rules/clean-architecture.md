@@ -23,7 +23,7 @@ src/
     db.ts            # Infrastructure (database, config, auth)
 ```
 
-### Incorrect (logic mixed into the route handler)
+**Incorrect (logic mixed into the route handler):**
 
 ```ts
 // WRONG: validation, transformation, DB calls and HTTP concerns all tangled together
@@ -52,7 +52,7 @@ fastify.post("/users", async (request, reply) => {
 });
 ```
 
-### Correct (thin handler + service layer)
+**Correct (thin handler + service layer):**
 
 `src/services/users.ts` — pure business logic, no Fastify import
 
@@ -134,7 +134,7 @@ import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { CreateUserBody, UserResponse } from "./schema.js";
 import { createUser, listUsers } from "../../services/users.js";
 
-const userRoutes: FastifyPluginAsyncZod = async function (fastify) => {
+const userRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.get(
     "/",
     { schema: { response: { 200: UserResponse.array() } } },
@@ -155,7 +155,9 @@ const userRoutes: FastifyPluginAsyncZod = async function (fastify) => {
       return user;
     },
   );
-}
+};
+
+export default userRoutes;
 ```
 
 ### Inject Dependencies Explicitly
