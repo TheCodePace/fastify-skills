@@ -37,8 +37,9 @@ npm install @fastify/env
 `src/plugins/config.ts`
 
 ```ts
-import { fp } from "fastify-plugin";
+import fp from "fastify-plugin";
 import fastifyEnv from "@fastify/env";
+import type { FastifyInstance } from "fastify";
 
 const schema = {
   type: "object",
@@ -62,7 +63,7 @@ const schema = {
   },
 };
 
-async function configPlugin(fastify, options) {
+async function configPlugin(fastify: FastifyInstance) {
   await fastify.register(fastifyEnv, {
     confKey: "config",
     schema,
@@ -109,7 +110,7 @@ server.get("/", async (request, reply) => {
 ```ts
 import Fastify from "fastify";
 
-const envToLogger = {
+const envToLogger: Record<string, object> = {
   development: {
     level: "debug",
     transport: {
@@ -128,7 +129,7 @@ const envToLogger = {
   },
 };
 
-const environment = process.env.NODE_ENV || "development";
+const environment = process.env.NODE_ENV ?? "development";
 
 const server = Fastify({
   logger: envToLogger[environment] ?? true,
@@ -269,7 +270,7 @@ import autoload from "@fastify/autoload";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
-const envToLogger = {
+const envToLogger: Record<string, object> = {
   development: {
     level: "debug",
     transport: {
@@ -294,7 +295,7 @@ interface BuildServerOptions {
 }
 
 function buildServer(options: BuildServerOptions = {}) {
-  const environment = process.env.NODE_ENV || "development";
+  const environment = process.env.NODE_ENV ?? "development";
 
   const server = Fastify({
     logger: options.logger ?? envToLogger[environment] ?? true,
