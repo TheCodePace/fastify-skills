@@ -8,7 +8,7 @@ Skills follow the [Agent Skills](https://agentskills.io/) format.
 
 ### fastify-best-practise
 
-Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, error handling, testing, and TypeScript integration.
+Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, decorators, error handling, testing, and TypeScript integration.
 
 | Rule                    | Impact     | Description                                                                |
 | ----------------------- | ---------- | -------------------------------------------------------------------------- |
@@ -22,6 +22,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Hooks & Lifecycle       | MEDIUM     | Request lifecycle hooks for auth, logging, rate limiting                   |
 | Testing                 | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                |
 | TypeScript              | MEDIUM     | Type providers, module augmentation, typed decorators                      |
+| Decorators              | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
 
 ## Installation
 
