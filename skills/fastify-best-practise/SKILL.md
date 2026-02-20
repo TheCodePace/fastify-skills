@@ -1,6 +1,6 @@
 ---
 name: fastify-best-practise
-description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, error handling, testing, and TypeScript integration. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
+description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, configuration, error handling, testing, and TypeScript integration. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
 ---
 
 # Fastify Best Practices
@@ -19,6 +19,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 
 | Rule                    | File                                                         | Impact     | Description                                                                   |
 | ----------------------- | ------------------------------------------------------------ | ---------- | ----------------------------------------------------------------------------- |
+| Configuration           | [configuration.md](rules/configuration.md)                   | HIGH       | Environment config, logger setup, security options, and graceful shutdown      |
 | Create Server           | [create-server.md](rules/create-server.md)                   | LOW-MEDIUM | Use a `buildServer()` factory function for reusable, testable server setup    |
 | Create Plugin           | [create-plugin.md](rules/create-plugin.md)                   | LOW-MEDIUM | Encapsulate reusable functionality in plugins with `fastify-plugin`           |
 | Autoload                | [autoload.md](rules/autoload.md)                             | HIGH       | Automatically load plugins and routes from the filesystem with `@fastify/autoload` |
@@ -34,9 +35,10 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 
 When generating Fastify code, read the relevant rule file(s) for the topic and apply the patterns shown. For a new project, all rules are relevant. For specific tasks, load only what's needed:
 
-- **New project setup**: `create-server.md`, `autoload.md`, `encapsulation.md`, `typescript-integration.md`
+- **New project setup**: `create-server.md`, `configuration.md`, `autoload.md`, `encapsulation.md`, `typescript-integration.md`
 - **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`
 - **Adding shared services**: `create-plugin.md`, `autoload.md`, `encapsulation.md`
+- **Configuration/environment**: `configuration.md`
 - **Error handling**: `error-handling.md`
 - **Auth/middleware**: `hooks-lifecycle.md`, `encapsulation.md`
 - **Writing tests**: `testing.md`, `create-server.md`
