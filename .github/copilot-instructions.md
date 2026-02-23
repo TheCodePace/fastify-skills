@@ -1,5 +1,24 @@
 # Copilot Instructions
 
+## Documentation Sync Requirement
+
+When adding, updating, or deleting a skill or any of its rules, **always keep the following files in sync** before considering the task done:
+
+- **`README.md`** — Update the rules table or skill listing to reflect the change.
+- **`AGENTS.md`** — Update the rules table and any related guidance for the affected skill.
+- **`skills/{skill-name}/SKILL.md`** — Update the skill's own definition, usage entries, and rules table as needed.
+
+These updates are mandatory whenever:
+
+- A new skill is created
+- A new rule is added to an existing skill
+- An existing rule is renamed, moved, or removed
+- A skill is deleted
+
+Do not consider the task complete until all three files accurately reflect the current state of the skill.
+
+---
+
 ## Changeset Requirement
 
 When completing work for a PR, **always ensure a changeset file exists** before considering the task done.
