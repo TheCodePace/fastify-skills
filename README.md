@@ -19,7 +19,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Schema Validation (Zod) | HIGH       | Type-safe validation with Zod + `fastify-type-provider-zod`                |
 | Encapsulation           | HIGH       | Proper scope isolation and when to use `fastify-plugin`                    |
 | Error Handling          | HIGH       | Custom error handlers, `@fastify/error`, `@fastify/sensible`, 404 handling |
-| Hooks & Lifecycle       | MEDIUM     | Request lifecycle hooks for auth, logging, rate limiting                   |
+| Hooks & Lifecycle       | MEDIUM     | Full lifecycle hook coverage: request pipeline (`onRequest` → `onResponse`), application hooks (`onReady`, `onClose`), scoped hooks, and async/callback patterns |
 | Testing                 | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                |
 | TypeScript              | MEDIUM     | Type providers, module augmentation, typed decorators                      |
 | Decorators              | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
