@@ -20,6 +20,8 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Encapsulation           | HIGH       | Proper scope isolation and when to use `fastify-plugin`                    |
 | Error Handling          | HIGH       | Custom error handlers, `@fastify/error`, `@fastify/sensible`, 404 handling |
 | Hooks & Lifecycle       | MEDIUM     | Full lifecycle hook coverage: request pipeline (`onRequest` → `onResponse`), application hooks (`onReady`, `onClose`), scoped hooks, and async/callback patterns |
+| Logging                 | HIGH       | Built-in Pino logger, request correlation, redaction, child loggers          |
+| Authentication          | HIGH       | JWT auth with `@fastify/jwt`, multi-strategy with `@fastify/auth`            |
 | Testing                 | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                |
 | TypeScript              | MEDIUM     | Type providers, module augmentation, typed decorators                      |
 | Decorators              | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |

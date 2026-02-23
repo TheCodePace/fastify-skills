@@ -24,6 +24,8 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | Encapsulation           | `encapsulation.md`            | HIGH       |
 | Error Handling          | `error-handling.md`           | HIGH       |
 | Hooks & Lifecycle       | `hooks-lifecycle.md`          | MEDIUM     |
+| Logging                 | `logging.md`                  | HIGH       |
+| Authentication          | `authentication.md`           | HIGH       |
 | Testing                 | `testing.md`                  | HIGH       |
 | TypeScript              | `typescript-integration.md`   | MEDIUM     |
 | Decorators              | `decorators.md`               | MEDIUM     |

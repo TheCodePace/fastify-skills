@@ -160,42 +160,97 @@ export default dashboardRoutes;
 
 ### Generate and Return Tokens
 
-**Correct (sign tokens on login):**
+**Correct (sign tokens on login with Zod validation):**
+
+`src/routes/auth/schema.ts`
+
+```ts
+import { z } from "zod";
+
+export const loginBodySchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+
+export const refreshBodySchema = z.object({
+  token: z.string(),
+});
+
+export const tokenResponseSchema = z.object({
+  token: z.string(),
+});
+
+export const errorResponseSchema = z.object({
+  error: z.string(),
+});
+```
 
 `src/routes/auth/index.ts`
 
 ```ts
-async function authRoutes(fastify) {
-  fastify.post("/login", async (request, reply) => {
-    const { email, password } = request.body;
-    const user = await verifyCredentials(email, password);
-    if (!user) {
-      reply.status(401);
-      return { error: "Invalid credentials" };
-    }
+import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
+import {
+  loginBodySchema,
+  refreshBodySchema,
+  tokenResponseSchema,
+  errorResponseSchema,
+} from "./schema.js";
 
-    const token = fastify.jwt.sign(
-      { id: user.id, role: user.role },
-      { expiresIn: "1h" },
-    );
-    return { token };
-  });
+const authRoutes: FastifyPluginAsyncZod = async function (fastify) {
+  fastify.post(
+    "/login",
+    {
+      schema: {
+        body: loginBodySchema,
+        response: {
+          200: tokenResponseSchema,
+          401: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const { email, password } = request.body;
+      const user = await verifyCredentials(email, password);
+      if (!user) {
+        reply.status(401);
+        return { error: "Invalid credentials" };
+      }
 
-  fastify.post("/refresh", async (request, reply) => {
-    const { token: oldToken } = request.body;
-    try {
-      const payload = fastify.jwt.verify(oldToken);
-      const newToken = fastify.jwt.sign(
-        { id: payload.id, role: payload.role },
+      const token = fastify.jwt.sign(
+        { id: user.id, role: user.role },
         { expiresIn: "1h" },
       );
-      return { token: newToken };
-    } catch {
-      reply.status(401);
-      return { error: "Invalid or expired token" };
-    }
-  });
-}
+      return { token };
+    },
+  );
+
+  fastify.post(
+    "/refresh",
+    {
+      schema: {
+        body: refreshBodySchema,
+        response: {
+          200: tokenResponseSchema,
+          401: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const { token: oldToken } = request.body;
+      try {
+        const payload = fastify.jwt.verify(oldToken);
+        const newToken = fastify.jwt.sign(
+          { id: payload.id, role: payload.role },
+          { expiresIn: "1h" },
+        );
+        return { token: newToken };
+      } catch {
+        reply.status(401);
+        return { error: "Invalid or expired token" };
+      }
+    },
+  );
+};
 
 export default authRoutes;
 ```
