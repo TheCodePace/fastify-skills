@@ -244,8 +244,10 @@ fastify.get(
 `src/routes/notifications/index.ts`
 
 ```ts
+import { WebSocket } from "ws";
+
 async function notificationRoutes(fastify) {
-  const subscribers = new Set<import("ws").WebSocket>();
+  const subscribers = new Set<WebSocket>();
 
   // WebSocket route — clients subscribe to live notifications
   fastify.get("/live", { websocket: true }, (socket, request) => {
@@ -266,7 +268,7 @@ async function notificationRoutes(fastify) {
     const saved = await saveNotification(notification);
 
     for (const client of subscribers) {
-      if (client.readyState === 1) {
+      if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify(saved));
       }
     }
@@ -285,17 +287,14 @@ export default notificationRoutes;
 
 ### TypeScript Support
 
-**Correct (augment Fastify types for WebSocket routes):**
+**Correct (augment Fastify types for authenticated WebSocket routes):**
 
 `src/types.d.ts`
 
 ```ts
-import type { FastifyRequest } from "fastify";
-import type { WebSocket } from "ws";
-
 declare module "fastify" {
-  interface RouteShorthandOptions {
-    websocket?: boolean;
+  interface FastifyRequest {
+    user: { id: string; role: string };
   }
 }
 ```
