@@ -120,9 +120,17 @@ app.addContentTypeParser(
 );
 ```
 
-**Correct (catch parse errors and return structured error responses):**
+**Correct (use `@fastify/error` for typed, reusable errors):**
 
 ```typescript
+import createError from "@fastify/error";
+
+const InvalidJsonError = createError(
+  "INVALID_JSON",
+  "Invalid JSON payload",
+  400,
+);
+
 app.removeContentTypeParser("application/json");
 
 app.addContentTypeParser(
@@ -132,9 +140,7 @@ app.addContentTypeParser(
     try {
       return JSON.parse(body as string);
     } catch {
-      const err = new Error("Invalid JSON payload");
-      (err as any).statusCode = 400;
-      throw err;
+      throw new InvalidJsonError();
     }
   },
 );
