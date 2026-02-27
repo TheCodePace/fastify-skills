@@ -32,6 +32,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Testing                 | [testing.md](rules/testing.md)                               | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                        |
 | TypeScript              | [typescript-integration.md](rules/typescript-integration.md) | MEDIUM     | Type providers, module augmentation, typed decorators                              |
 | Decorators              | [decorators.md](rules/decorators.md)                         | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
+| WebSockets              | [websockets.md](rules/websockets.md)                         | HIGH       | Real-time support with `@fastify/websocket`: routes, lifecycle, broadcast, auth |
 
 ## Usage
 
@@ -43,6 +44,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Error handling**: `error-handling.md`
 - **Auth/middleware**: `authentication.md`, `hooks-lifecycle.md`, `encapsulation.md`
 - **Custom decorators**: `decorators.md`, `typescript-integration.md`
+- **WebSockets / real-time**: `websockets.md`, `authentication.md`, `encapsulation.md`
 - **Logging**: `logging.md`
 - **Writing tests**: `testing.md`, `create-server.md`
 

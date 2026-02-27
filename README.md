@@ -25,6 +25,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Testing                 | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                |
 | TypeScript              | MEDIUM     | Type providers, module augmentation, typed decorators                      |
 | Decorators              | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
+| WebSockets              | HIGH       | Real-time support with `@fastify/websocket`: routes, lifecycle, broadcast, auth |
 
 ## Installation
 
