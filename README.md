@@ -17,6 +17,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Autoload                | HIGH       | Automatically load plugins and routes with `@fastify/autoload`             |
 | Route Best Practices    | MEDIUM     | Organize routes with plugins/prefixes, async handlers, full route options  |
 | Schema Validation (Zod) | HIGH       | Type-safe validation with Zod + `fastify-type-provider-zod`                |
+| Serialization (Zod)     | HIGH       | Response serialization with Zod, migration from JSON Schema, known limitations |
 | Encapsulation           | HIGH       | Proper scope isolation and when to use `fastify-plugin`                    |
 | Error Handling          | HIGH       | Custom error handlers, `@fastify/error`, `@fastify/sensible`, 404 handling |
 | Hooks & Lifecycle       | MEDIUM     | Full lifecycle hook coverage: request pipeline (`onRequest` → `onResponse`), application hooks (`onReady`, `onClose`), scoped hooks, and async/callback patterns |
