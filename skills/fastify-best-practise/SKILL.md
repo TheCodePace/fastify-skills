@@ -32,19 +32,21 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Testing                 | [testing.md](rules/testing.md)                               | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                        |
 | TypeScript              | [typescript-integration.md](rules/typescript-integration.md) | MEDIUM     | Type providers, module augmentation, typed decorators                              |
 | Decorators              | [decorators.md](rules/decorators.md)                         | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
+| Serialization           | [serialization.md](rules/serialization.md)                   | HIGH       | Response serialization with JSON Schema and `fast-json-stringify`                                      |
 
 ## Usage
 
 When generating Fastify code, read the relevant rule file(s) for the topic and apply the patterns shown. For a new project, all rules are relevant. For specific tasks, load only what's needed:
 
 - **New project setup**: `create-server.md`, `autoload.md`, `encapsulation.md`, `typescript-integration.md`
-- **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`
+- **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`, `serialization.md`
 - **Adding shared services**: `create-plugin.md`, `autoload.md`, `encapsulation.md`
 - **Error handling**: `error-handling.md`
 - **Auth/middleware**: `authentication.md`, `hooks-lifecycle.md`, `encapsulation.md`
 - **Custom decorators**: `decorators.md`, `typescript-integration.md`
 - **Logging**: `logging.md`
 - **Writing tests**: `testing.md`, `create-server.md`
+- **Response serialization**: `serialization.md`, `schema-validation-zod.md`
 
 ## Recommended Project Structure
 
