@@ -261,7 +261,7 @@ app.addContentTypeParser(
 
 app.post("/upload-stream", async (request) => {
   const destination = createWriteStream("/tmp/upload.bin");
-  await pipeline(request.raw, destination);
+  await pipeline(request.body as NodeJS.ReadableStream, destination);
   return { success: true };
 });
 ```
