@@ -26,6 +26,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Testing                 | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                |
 | TypeScript              | MEDIUM     | Type providers, module augmentation, typed decorators                      |
 | Decorators              | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
+| Content Type Parser     | HIGH       | Custom content type parsers, body limits, multipart uploads, catch-all and regex matching              |
 
 ## Installation
 
