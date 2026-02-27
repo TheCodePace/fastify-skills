@@ -252,31 +252,29 @@ When you need the file content directly (e.g., parsing a CSV or processing an im
 
 ```ts
 async function importRoutes(fastify) {
-  // Override the file size limit for this route
-  fastify.post(
-    "/import/csv",
-    { config: { limits: { fileSize: 2 * 1024 * 1024 } } },
-    async (request, reply) => {
-      const file = await request.file();
+  fastify.post("/import/csv", async (request, reply) => {
+    // Pass per-request limits directly to request.file()
+    const file = await request.file({
+      limits: { fileSize: 2 * 1024 * 1024 }, // 2 MB for CSV imports
+    });
 
-      if (!file || file.mimetype !== "text/csv") {
-        reply.status(400);
-        return { error: "A CSV file is required" };
-      }
+    if (!file || file.mimetype !== "text/csv") {
+      reply.status(400);
+      return { error: "A CSV file is required" };
+    }
 
-      const buffer = await file.toBuffer();
+    const buffer = await file.toBuffer();
 
-      if (file.file.truncated) {
-        reply.status(413);
-        return { error: "CSV file too large (max 2 MB)" };
-      }
+    if (file.file.truncated) {
+      reply.status(413);
+      return { error: "CSV file too large (max 2 MB)" };
+    }
 
-      const csvContent = buffer.toString("utf-8");
-      const records = parseCsv(csvContent);
+    const csvContent = buffer.toString("utf-8");
+    const records = parseCsv(csvContent);
 
-      return { imported: records.length };
-    },
-  );
+    return { imported: records.length };
+  });
 }
 
 export default importRoutes;
