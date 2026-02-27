@@ -30,6 +30,7 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | TypeScript              | `typescript-integration.md`   | MEDIUM     |
 | Decorators              | `decorators.md`               | MEDIUM     |
 | Configuration           | `configuration.md`            | HIGH       |
+| Content Type Parser     | `content-type-parser.md`      | HIGH       |
 
 When adding a new rule to this skill:
 
