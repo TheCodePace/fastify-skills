@@ -32,12 +32,13 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Testing                 | [testing.md](rules/testing.md)                               | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                        |
 | TypeScript              | [typescript-integration.md](rules/typescript-integration.md) | MEDIUM     | Type providers, module augmentation, typed decorators                              |
 | Decorators              | [decorators.md](rules/decorators.md)                         | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
+| HTTP/2 Support          | [http2.md](rules/http2.md)                                   | MEDIUM     | HTTP/2 over TLS, h2c for internal services, `allowHTTP1` fallback                  |
 
 ## Usage
 
 When generating Fastify code, read the relevant rule file(s) for the topic and apply the patterns shown. For a new project, all rules are relevant. For specific tasks, load only what's needed:
 
-- **New project setup**: `create-server.md`, `autoload.md`, `encapsulation.md`, `typescript-integration.md`
+- **New project setup**: `create-server.md`, `autoload.md`, `encapsulation.md`, `typescript-integration.md`, `http2.md`
 - **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`
 - **Adding shared services**: `create-plugin.md`, `autoload.md`, `encapsulation.md`
 - **Error handling**: `error-handling.md`
