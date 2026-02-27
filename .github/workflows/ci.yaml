@@ -6,11 +6,13 @@ on:
     paths:
       - "skills/**/rules/**"
       - "packages/validate-rules/**"
+      - "package.json"
   pull_request:
     branches: [main]
     paths:
       - "skills/**/rules/**"
       - "packages/validate-rules/**"
+      - "package.json"
 
 jobs:
   ci:
