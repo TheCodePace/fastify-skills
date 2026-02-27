@@ -21,7 +21,7 @@ import Fastify from "fastify";
 const server = Fastify({ logger: true });
 
 server.get("/users", async () => {
-  return db.users.findAll(); // serialised with JSON.stringify
+  return db.users.findAll(); // serialized with JSON.stringify
 });
 ```
 
@@ -154,7 +154,7 @@ import { readFile } from "node:fs/promises";
 
 server.get("/large-file", async () => {
   const content = await readFile("./large-file.json", "utf-8");
-  return JSON.parse(content); // buffers the whole file, then serialises again
+  return JSON.parse(content); // buffers the whole file, then serializes again
 });
 ```
 
