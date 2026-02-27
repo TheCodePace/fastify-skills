@@ -1,6 +1,6 @@
 ---
 name: fastify-best-practise
-description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, decorators, error handling, testing, and TypeScript integration. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
+description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, configuration, decorators, error handling, testing, and TypeScript integration. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
 ---
 
 # Fastify Best Practices
@@ -17,29 +17,31 @@ A curated set of rules and patterns for building production-ready Fastify applic
 
 The rules are organized by topic in the `rules/` directory. Each rule follows a consistent format with impact rating, incorrect/correct examples, and references to official docs.
 
-| Rule                    | File                                                         | Impact     | Description                                                                        |
-| ----------------------- | ------------------------------------------------------------ | ---------- | ---------------------------------------------------------------------------------- |
-| Create Server           | [create-server.md](rules/create-server.md)                   | LOW-MEDIUM | Use a `buildServer()` factory function for reusable, testable server setup         |
-| Create Plugin           | [create-plugin.md](rules/create-plugin.md)                   | LOW-MEDIUM | Encapsulate reusable functionality in plugins with `fastify-plugin`                |
-| Autoload                | [autoload.md](rules/autoload.md)                             | HIGH       | Automatically load plugins and routes from the filesystem with `@fastify/autoload` |
-| Route Best Practices    | [route-best-practices.md](rules/route-best-practices.md)     | MEDIUM     | Organize routes with plugins/prefixes, use async handlers, full route options      |
-| Schema Validation (Zod) | [schema-validation-zod.md](rules/schema-validation-zod.md)   | HIGH       | Type-safe validation with Zod + `fastify-type-provider-zod`                        |
-| Encapsulation           | [encapsulation.md](rules/encapsulation.md)                   | HIGH       | Proper scope isolation and when to use `fastify-plugin`                            |
-| Error Handling          | [error-handling.md](rules/error-handling.md)                 | HIGH       | Custom error handlers, `@fastify/error`, 404 handling, structured responses        |
-| Hooks & Lifecycle       | [hooks-lifecycle.md](rules/hooks-lifecycle.md)               | MEDIUM     | All request/reply and application hooks: onRequest, preParsing, preValidation, preHandler, preSerialization, onError, onSend, onResponse, onTimeout, onRequestAbort, onReady, onListen, onClose, onRoute, onRegister                           |
-| Logging                 | [logging.md](rules/logging.md)                               | HIGH       | Built-in Pino logger, request correlation, redaction, child loggers                                   |
-| Authentication          | [authentication.md](rules/authentication.md)                 | HIGH       | JWT auth with `@fastify/jwt`, multi-strategy with `@fastify/auth`                  |
-| Testing                 | [testing.md](rules/testing.md)                               | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                        |
-| TypeScript              | [typescript-integration.md](rules/typescript-integration.md) | MEDIUM     | Type providers, module augmentation, typed decorators                              |
-| Decorators              | [decorators.md](rules/decorators.md)                         | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
+| Rule                    | File                                                         | Impact     | Description                                                                                                                                                                                                          |
+| ----------------------- | ------------------------------------------------------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Configuration           | [configuration.md](rules/configuration.md)                   | HIGH       | Environment config, logger setup, security options, and graceful shutdown                                                                                                                                            |
+| Create Server           | [create-server.md](rules/create-server.md)                   | LOW-MEDIUM | Use a `buildServer()` factory function for reusable, testable server setup                                                                                                                                           |
+| Create Plugin           | [create-plugin.md](rules/create-plugin.md)                   | LOW-MEDIUM | Encapsulate reusable functionality in plugins with `fastify-plugin`                                                                                                                                                  |
+| Autoload                | [autoload.md](rules/autoload.md)                             | HIGH       | Automatically load plugins and routes from the filesystem with `@fastify/autoload`                                                                                                                                   |
+| Route Best Practices    | [route-best-practices.md](rules/route-best-practices.md)     | MEDIUM     | Organize routes with plugins/prefixes, use async handlers, full route options                                                                                                                                        |
+| Schema Validation (Zod) | [schema-validation-zod.md](rules/schema-validation-zod.md)   | HIGH       | Type-safe validation with Zod + `fastify-type-provider-zod`                                                                                                                                                          |
+| Encapsulation           | [encapsulation.md](rules/encapsulation.md)                   | HIGH       | Proper scope isolation and when to use `fastify-plugin`                                                                                                                                                              |
+| Error Handling          | [error-handling.md](rules/error-handling.md)                 | HIGH       | Custom error handlers, `@fastify/error`, 404 handling, structured responses                                                                                                                                          |
+| Hooks & Lifecycle       | [hooks-lifecycle.md](rules/hooks-lifecycle.md)               | MEDIUM     | All request/reply and application hooks: onRequest, preParsing, preValidation, preHandler, preSerialization, onError, onSend, onResponse, onTimeout, onRequestAbort, onReady, onListen, onClose, onRoute, onRegister |
+| Logging                 | [logging.md](rules/logging.md)                               | HIGH       | Built-in Pino logger, request correlation, redaction, child loggers                                                                                                                                                  |
+| Authentication          | [authentication.md](rules/authentication.md)                 | HIGH       | JWT auth with `@fastify/jwt`, multi-strategy with `@fastify/auth`                                                                                                                                                    |
+| Testing                 | [testing.md](rules/testing.md)                               | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                                                                                                                                                          |
+| TypeScript              | [typescript-integration.md](rules/typescript-integration.md) | MEDIUM     | Type providers, module augmentation, typed decorators                                                                                                                                                                |
+| Decorators              | [decorators.md](rules/decorators.md)                         | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply`                                                                                                                |
 
 ## Usage
 
 When generating Fastify code, read the relevant rule file(s) for the topic and apply the patterns shown. For a new project, all rules are relevant. For specific tasks, load only what's needed:
 
-- **New project setup**: `create-server.md`, `autoload.md`, `encapsulation.md`, `typescript-integration.md`
+- **New project setup**: `create-server.md`, `configuration.md`, `autoload.md`, `encapsulation.md`, `typescript-integration.md`
 - **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`
 - **Adding shared services**: `create-plugin.md`, `autoload.md`, `encapsulation.md`
+- **Configuration/environment**: `configuration.md`
 - **Error handling**: `error-handling.md`
 - **Auth/middleware**: `authentication.md`, `hooks-lifecycle.md`, `encapsulation.md`
 - **Custom decorators**: `decorators.md`, `typescript-integration.md`
