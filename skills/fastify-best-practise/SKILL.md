@@ -40,6 +40,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Clean Architecture      | [clean-architecture.md](rules/clean-architecture.md)         | HIGH       | Pure service-layer functions + thin route handlers; explicit dependency injection                                                                                  |
 | Unit Testing            | [unit-testing.md](rules/unit-testing.md)                     | HIGH       | Unit-test service functions in isolation with mock database stubs                                                                                                  |
 | Performance             | [performance.md](rules/performance.md)                       | HIGH       | Schema pre-compilation, serialization, load shedding, streaming, benchmarking                                                                                      |
+| Rate Limiting           | [rate-limiting.md](rules/rate-limiting.md)                   | HIGH       | Protect APIs with `@fastify/rate-limit`, per-route overrides, Redis store, custom keys |
 
 ## Usage
 
@@ -51,6 +52,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Configuration/environment**: `configuration.md`
 - **Error handling**: `error-handling.md`
 - **Auth/middleware**: `authentication.md`, `hooks-lifecycle.md`, `encapsulation.md`
+- **Rate limiting**: `rate-limiting.md`, `hooks-lifecycle.md`
 - **Custom decorators**: `decorators.md`, `typescript-integration.md`
 - **Logging**: `logging.md`
 - **Body parsing/file uploads**: `content-type-parser.md`

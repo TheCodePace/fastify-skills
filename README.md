@@ -33,6 +33,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Clean Architecture      | HIGH       | Pure service-layer functions + thin route handlers; explicit dependency injection                                             |
 | Unit Testing            | HIGH       | Unit-test service functions in isolation with mock database stubs                                                             |
 | Performance             | HIGH       | Schema pre-compilation, serialization, load shedding, streaming, benchmarking                                                 |
+| Rate Limiting           | HIGH       | Protect APIs with `@fastify/rate-limit`, per-route overrides, Redis store, custom keys |
 
 ## Installation
 
