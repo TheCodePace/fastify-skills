@@ -100,7 +100,7 @@ import { envSchema } from "./schema/env.js";
 
 const config = envSchema.parse(process.env);
 
-const envToLogger: Record<string, object> = {
+const envToLogger = {
   development: {
     level: "debug",
     transport: {
@@ -117,10 +117,10 @@ const envToLogger: Record<string, object> = {
   test: {
     level: "silent",
   },
-};
+} as const;
 
 const server = Fastify({
-  logger: envToLogger[config.NODE_ENV] ?? true,
+  logger: envToLogger[config.NODE_ENV],
 });
 ```
 
@@ -264,11 +264,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Fastify from "fastify";
 import autoload from "@fastify/autoload";
+import closeWithGrace from "close-with-grace";
 import type { Env } from "./schema/env.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
-const envToLogger: Record<string, object> = {
+const envToLogger = {
   development: {
     level: "debug",
     transport: {
@@ -285,7 +286,7 @@ const envToLogger: Record<string, object> = {
   test: {
     level: "silent",
   },
-};
+} as const;
 
 export interface BuildServerOptions {
   config: Env;
@@ -294,7 +295,7 @@ export interface BuildServerOptions {
 
 export function buildServer({ config, trustProxy }: BuildServerOptions) {
   const server = Fastify({
-    logger: envToLogger[config.NODE_ENV] ?? true,
+    logger: envToLogger[config.NODE_ENV],
     trustProxy: trustProxy ?? false,
     requestTimeout: 120_000,
     bodyLimit: 1_048_576,
@@ -314,38 +315,39 @@ export function buildServer({ config, trustProxy }: BuildServerOptions) {
     cascadeHooks: true,
   });
 
+  // Graceful shutdown — close-with-grace handles SIGINT, SIGTERM,
+  // uncaught exceptions, and unhandled rejections automatically
+  closeWithGrace({ delay: 10_000 }, async ({ signal, err }) => {
+    if (err) {
+      server.log.error({ err }, "server closing with error");
+    } else {
+      server.log.info(`${signal} received, server closing`);
+    }
+    await server.close();
+  });
+
   return server;
 }
 ```
 
 ### Handle Graceful Shutdown with `close-with-grace`
 
-Use `close-with-grace` to handle process signals and errors in a consistent way. It listens for `SIGINT`, `SIGTERM`, uncaught exceptions, and unhandled rejections automatically.
+Use `close-with-grace` to handle process signals and errors in a consistent way. It listens for `SIGINT`, `SIGTERM`, uncaught exceptions, and unhandled rejections automatically. Register it inside the `buildServer` function so every server instance gets graceful shutdown.
 
 ```bash
 npm install close-with-grace
 ```
 
-**Correct (use `close-with-grace` in the app entry point):**
+**Correct (use `close-with-grace` in `buildServer` and a simple entry point):**
 
 `src/app.ts`
 
 ```ts
-import closeWithGrace from "close-with-grace";
 import { envSchema } from "./schema/env.js";
 import { buildServer } from "./server.js";
 
 const config = envSchema.parse(process.env);
 const server = buildServer({ config });
-
-closeWithGrace({ delay: 10_000 }, async ({ signal, err }) => {
-  if (err) {
-    server.log.error({ err }, "server closing with error");
-  } else {
-    server.log.info(`${signal} received, server closing`);
-  }
-  await server.close();
-});
 
 await server.listen({
   port: config.PORT,
