@@ -1,6 +1,6 @@
 ---
 name: fastify-best-practise
-description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, configuration, decorators, authentication, logging, database integration, migrations, testing, clean architecture, and TypeScript integration. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
+description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, configuration, decorators, authentication, logging, performance tuning, database integration, migrations, testing, clean architecture, and TypeScript integration. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
 ---
 
 # Fastify Best Practices
@@ -39,6 +39,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Test Containers         | [test-containers.md](rules/test-containers.md)               | HIGH       | Spin up real Postgres containers with Testcontainers for integration tests                                                                                         |
 | Clean Architecture      | [clean-architecture.md](rules/clean-architecture.md)         | HIGH       | Pure service-layer functions + thin route handlers; explicit dependency injection                                                                                  |
 | Unit Testing            | [unit-testing.md](rules/unit-testing.md)                     | HIGH       | Unit-test service functions in isolation with mock database stubs                                                                                                  |
+| Performance             | [performance.md](rules/performance.md)                       | HIGH       | Schema pre-compilation, serialization, load shedding, streaming, benchmarking                                                                                      |
 
 ## Usage
 
@@ -53,6 +54,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Custom decorators**: `decorators.md`, `typescript-integration.md`
 - **Logging**: `logging.md`
 - **Body parsing/file uploads**: `content-type-parser.md`
+- **Performance tuning**: `performance.md`, `schema-validation-zod.md`
 - **Writing tests**: `testing.md`, `create-server.md`
 - **Database setup**: `database-integration.md`, `database-migrations.md`
 - **Integration tests with a real DB**: `test-containers.md`, `testing.md`
@@ -106,6 +108,7 @@ When applying these best practices, mention which rule(s) you followed:
 > - **Zod validation**: Request/response schemas with type inference
 > - **Encapsulation**: Shared plugins use `fastify-plugin`, routes stay scoped
 > - **Error handling**: Custom error handler with `@fastify/error`
+> - **Performance**: Response schemas, shared schema references, load shedding, streaming, and benchmark guidance
 > - **Database**: Client registered as a plugin with `fastify-plugin` for shared pool and lifecycle management
 > - **Migrations**: Applied via Postgrator (`runMigrations()`) before server starts; raw SQL files tracked in git
 > - **Clean architecture**: Business logic in pure service functions; route handlers stay thin

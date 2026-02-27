@@ -8,7 +8,7 @@ Skills follow the [Agent Skills](https://agentskills.io/) format.
 
 ### fastify-best-practise
 
-Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, configuration, decorators, authentication, logging, database integration, migrations, testing, clean architecture, and TypeScript integration.
+Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, configuration, decorators, authentication, logging, performance tuning, database integration, migrations, testing, clean architecture, and TypeScript integration.
 
 | Rule                    | Impact     | Description                                                                                                                   |
 | ----------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------- |
@@ -32,6 +32,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Test Containers         | HIGH       | Spin up real Postgres containers with Testcontainers for isolated integration tests                                           |
 | Clean Architecture      | HIGH       | Pure service-layer functions + thin route handlers; explicit dependency injection                                             |
 | Unit Testing            | HIGH       | Unit-test service functions in isolation with mock database stubs                                                             |
+| Performance             | HIGH       | Schema pre-compilation, serialization, load shedding, streaming, benchmarking                                                 |
 
 ## Installation
 

@@ -20,7 +20,7 @@ pnpm run validate   # validate all rule files against the rule schema
 
 ### fastify-best-practise
 
-Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, decorators, authentication, logging, database integration, testing, and TypeScript integration.
+Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, decorators, authentication, logging, performance tuning, database integration, testing, and TypeScript integration.
 
 Rules are stored in `skills/fastify-best-practise/rules/`:
 
@@ -46,6 +46,7 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | Test Containers         | `test-containers.md`          | HIGH       |
 | Clean Architecture      | `clean-architecture.md`       | HIGH       |
 | Unit Testing            | `unit-testing.md`             | HIGH       |
+| Performance             | `performance.md`              | HIGH       |
 
 When adding a new rule to this skill:
 
