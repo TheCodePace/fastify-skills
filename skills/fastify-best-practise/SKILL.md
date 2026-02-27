@@ -32,6 +32,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Testing                 | [testing.md](rules/testing.md)                               | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                        |
 | TypeScript              | [typescript-integration.md](rules/typescript-integration.md) | MEDIUM     | Type providers, module augmentation, typed decorators                              |
 | Decorators              | [decorators.md](rules/decorators.md)                         | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
+| HTTP Proxy              | [http-proxy.md](rules/http-proxy.md)                         | HIGH       | Reverse proxy and API gateway patterns with `@fastify/http-proxy` and `@fastify/reply-from`           |
 
 ## Usage
 
@@ -42,6 +43,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Adding shared services**: `create-plugin.md`, `autoload.md`, `encapsulation.md`
 - **Error handling**: `error-handling.md`
 - **Auth/middleware**: `authentication.md`, `hooks-lifecycle.md`, `encapsulation.md`
+- **Proxying / API gateway**: `http-proxy.md`, `hooks-lifecycle.md`, `error-handling.md`
 - **Custom decorators**: `decorators.md`, `typescript-integration.md`
 - **Logging**: `logging.md`
 - **Writing tests**: `testing.md`, `create-server.md`
