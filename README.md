@@ -34,6 +34,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Unit Testing            | HIGH       | Unit-test service functions in isolation with mock database stubs                                                             |
 | Performance             | HIGH       | Schema pre-compilation, serialization, load shedding, streaming, benchmarking                                                 |
 | Rate Limiting           | HIGH       | Protect APIs with `@fastify/rate-limit`, per-route overrides, Redis store, custom keys |
+| Serialization           | HIGH       | Response serialization with JSON Schema and `fast-json-stringify`                                                             |
 
 ## Installation
 
