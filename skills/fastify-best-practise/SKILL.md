@@ -1,7 +1,6 @@
 ---
 name: fastify-best-practise
-description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, configuration, decorators, error handling, testing, and TypeScript integration. Use when writing
-or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
+description: Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, configuration, decorators, error handling, testing, and TypeScript integration. Use when writing or reviewing Fastify code, setting up a new Fastify project, or asking "How should I structure my Fastify app?"
 ---
 
 # Fastify Best Practices
