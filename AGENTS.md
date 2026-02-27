@@ -21,6 +21,7 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | Autoload                | `autoload.md`                 | HIGH       |
 | Route Best Practices    | `route-best-practices.md`     | MEDIUM     |
 | Schema Validation (Zod) | `schema-validation-zod.md`    | HIGH       |
+| Serialization (Zod)     | `serialization-zod.md`        | HIGH       |
 | Encapsulation           | `encapsulation.md`            | HIGH       |
 | Error Handling          | `error-handling.md`           | HIGH       |
 | Hooks & Lifecycle       | `hooks-lifecycle.md`          | MEDIUM     |

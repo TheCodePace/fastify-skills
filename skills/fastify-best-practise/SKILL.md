@@ -24,6 +24,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Autoload                | [autoload.md](rules/autoload.md)                             | HIGH       | Automatically load plugins and routes from the filesystem with `@fastify/autoload` |
 | Route Best Practices    | [route-best-practices.md](rules/route-best-practices.md)     | MEDIUM     | Organize routes with plugins/prefixes, use async handlers, full route options      |
 | Schema Validation (Zod) | [schema-validation-zod.md](rules/schema-validation-zod.md)   | HIGH       | Type-safe validation with Zod + `fastify-type-provider-zod`                        |
+| Serialization (Zod)     | [serialization-zod.md](rules/serialization-zod.md)           | HIGH       | Response serialization with Zod, migration from JSON Schema, known limitations     |
 | Encapsulation           | [encapsulation.md](rules/encapsulation.md)                   | HIGH       | Proper scope isolation and when to use `fastify-plugin`                            |
 | Error Handling          | [error-handling.md](rules/error-handling.md)                 | HIGH       | Custom error handlers, `@fastify/error`, 404 handling, structured responses        |
 | Hooks & Lifecycle       | [hooks-lifecycle.md](rules/hooks-lifecycle.md)               | MEDIUM     | All request/reply and application hooks: onRequest, preParsing, preValidation, preHandler, preSerialization, onError, onSend, onResponse, onTimeout, onRequestAbort, onReady, onListen, onClose, onRoute, onRegister                           |
@@ -38,7 +39,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 When generating Fastify code, read the relevant rule file(s) for the topic and apply the patterns shown. For a new project, all rules are relevant. For specific tasks, load only what's needed:
 
 - **New project setup**: `create-server.md`, `autoload.md`, `encapsulation.md`, `typescript-integration.md`
-- **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`
+- **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`, `serialization-zod.md`
 - **Adding shared services**: `create-plugin.md`, `autoload.md`, `encapsulation.md`
 - **Error handling**: `error-handling.md`
 - **Auth/middleware**: `authentication.md`, `hooks-lifecycle.md`, `encapsulation.md`
