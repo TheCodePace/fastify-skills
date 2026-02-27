@@ -29,6 +29,7 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | Testing                 | `testing.md`                  | HIGH       |
 | TypeScript              | `typescript-integration.md`   | MEDIUM     |
 | Decorators              | `decorators.md`               | MEDIUM     |
+| Deployment              | `deployment.md`               | HIGH       |
 
 When adding a new rule to this skill:
 
