@@ -124,7 +124,7 @@ fastify.get("/readyz", async (request, reply) => {
 
 // Skip the isReady gate for health-check routes
 fastify.addHook("onRequest", async (request, reply) => {
-  if (request.url === "/healthz" || request.url === "/readyz") {
+  if (request.routeOptions.url === "/healthz" || request.routeOptions.url === "/readyz") {
     return; // allow health checks through
   }
   if (!fastify.isReady) {
@@ -168,7 +168,7 @@ async function readinessPlugin(
   fastify.decorate("isReady", false);
 
   fastify.addHook("onRequest", async (request, reply) => {
-    if (skip.has(request.url)) return;
+    if (skip.has(request.routeOptions.url)) return;
     if (!fastify.isReady) {
       reply.status(503);
       return reply.send({ error: "Service Unavailable" });
@@ -217,7 +217,7 @@ containers:
       httpGet:
         path: /healthz
         port: 3000
-      initialDelaySeconds: 5
+      initialDelaySeconds: 10
       periodSeconds: 10
     readinessProbe:
       httpGet:
