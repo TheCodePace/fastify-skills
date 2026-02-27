@@ -25,6 +25,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Autoload                | [autoload.md](rules/autoload.md)                             | HIGH       | Automatically load plugins and routes from the filesystem with `@fastify/autoload`                                                                                 |
 | Route Best Practices    | [route-best-practices.md](rules/route-best-practices.md)     | MEDIUM     | Organize routes with plugins/prefixes, use async handlers, full route options                                                                                      |
 | Schema Validation (Zod) | [schema-validation-zod.md](rules/schema-validation-zod.md)   | HIGH       | Type-safe validation with Zod + `fastify-type-provider-zod`                                                                                                        |
+| Serialization (Zod)     | [serialization-zod.md](rules/serialization-zod.md)           | HIGH       | Type-safe response serialization with Zod schemas, output validation, and compatibility notes                                                                      |
 | Encapsulation           | [encapsulation.md](rules/encapsulation.md)                   | HIGH       | Proper scope isolation and when to use `fastify-plugin`                                                                                                            |
 | Error Handling          | [error-handling.md](rules/error-handling.md)                 | HIGH       | Custom error handlers, `@fastify/error`, 404 handling, structured responses                                                                                        |
 | Hooks & Lifecycle       | [hooks-lifecycle.md](rules/hooks-lifecycle.md)               | MEDIUM     | All request/reply and application hooks: onRequest, preParsing, preValidation, preHandler, preSerialization, onError, onSend, onResponse, onReady, onClose         |
@@ -40,7 +41,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Clean Architecture      | [clean-architecture.md](rules/clean-architecture.md)         | HIGH       | Pure service-layer functions + thin route handlers; explicit dependency injection                                                                                  |
 | Unit Testing            | [unit-testing.md](rules/unit-testing.md)                     | HIGH       | Unit-test service functions in isolation with mock database stubs                                                                                                  |
 | Performance             | [performance.md](rules/performance.md)                       | HIGH       | Schema pre-compilation, serialization, load shedding, streaming, benchmarking                                                                                      |
-| Rate Limiting           | [rate-limiting.md](rules/rate-limiting.md)                   | HIGH       | Protect APIs with `@fastify/rate-limit`, per-route overrides, Redis store, custom keys |
+| Rate Limiting           | [rate-limiting.md](rules/rate-limiting.md)                   | HIGH       | Protect APIs with `@fastify/rate-limit`, per-route overrides, Redis store, custom keys                                                                             |
 | Serialization           | [serialization.md](rules/serialization.md)                   | HIGH       | Response serialization with JSON Schema and `fast-json-stringify`                                                                                                  |
 
 ## Usage
@@ -48,7 +49,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 When generating Fastify code, read the relevant rule file(s) for the topic and apply the patterns shown. For a new project, all rules are relevant. For specific tasks, load only what's needed:
 
 - **New project setup**: `create-server.md`, `configuration.md`, `autoload.md`, `encapsulation.md`, `typescript-integration.md`
-- **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`, `serialization.md`
+- **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`, `serialization-zod.md`, `serialization.md`
 - **Adding shared services**: `create-plugin.md`, `autoload.md`, `encapsulation.md`
 - **Configuration/environment**: `configuration.md`
 - **Error handling**: `error-handling.md`
@@ -63,7 +64,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Integration tests with a real DB**: `test-containers.md`, `testing.md`
 - **Clean separation of concerns**: `clean-architecture.md`, `unit-testing.md`
 - **Unit testing business logic**: `unit-testing.md`, `clean-architecture.md`
-- **Response serialization**: `serialization.md`, `schema-validation-zod.md`
+- **Response serialization**: `serialization.md`, `serialization-zod.md`, `schema-validation-zod.md`
 
 ## Recommended Project Structure
 
@@ -109,7 +110,7 @@ When applying these best practices, mention which rule(s) you followed:
 > Applied Fastify best practices:
 >
 > - **Route organization**: Routes grouped by resource with prefixes
-> - **Zod validation**: Request/response schemas with type inference
+> - **Zod validation and serialization**: Request/response schemas with type inference and output validation
 > - **Encapsulation**: Shared plugins use `fastify-plugin`, routes stay scoped
 > - **Error handling**: Custom error handler with `@fastify/error`
 > - **Performance**: Response schemas, shared schema references, load shedding, streaming, and benchmark guidance
