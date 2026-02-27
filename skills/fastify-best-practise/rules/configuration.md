@@ -340,6 +340,36 @@ npm install close-with-grace
 
 **Correct (use `close-with-grace` in `buildServer` and a simple entry point):**
 
+`src/server.ts`
+
+```ts
+import Fastify from "fastify";
+import type { Env } from "./schema/env.js";
+
+export interface BuildServerOptions {}
+
+export function buildServer(_: BuildServerOptions) {
+  const server = Fastify();
+
+  // Autoload plugins (config, db, auth — all use fastify-plugin)
+
+  // Autoload routes (encapsulated, prefixes from folder names)
+
+  // Graceful shutdown — close-with-grace handles SIGINT, SIGTERM,
+  // uncaught exceptions, and unhandled rejections automatically
+  closeWithGrace({ delay: 10_000 }, async ({ signal, err }) => {
+    if (err) {
+      server.log.error({ err }, "server closing with error");
+    } else {
+      server.log.info(`${signal} received, server closing`);
+    }
+    await server.close();
+  });
+
+  return server;
+}
+```
+
 `src/app.ts`
 
 ```ts
