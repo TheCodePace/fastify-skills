@@ -32,6 +32,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Testing                 | [testing.md](rules/testing.md)                               | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                        |
 | TypeScript              | [typescript-integration.md](rules/typescript-integration.md) | MEDIUM     | Type providers, module augmentation, typed decorators                              |
 | Decorators              | [decorators.md](rules/decorators.md)                         | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply` |
+| Multipart & File Uploads | [multipart.md](rules/multipart.md)                          | HIGH       | File uploads with `@fastify/multipart`, streaming, size limits, MIME validation |
 
 ## Usage
 
@@ -44,6 +45,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Auth/middleware**: `authentication.md`, `hooks-lifecycle.md`, `encapsulation.md`
 - **Custom decorators**: `decorators.md`, `typescript-integration.md`
 - **Logging**: `logging.md`
+- **File uploads**: `multipart.md`, `route-best-practices.md`
 - **Writing tests**: `testing.md`, `create-server.md`
 
 ## Recommended Project Structure
