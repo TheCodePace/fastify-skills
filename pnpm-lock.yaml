@@ -22,8 +22,8 @@ catalogs:
       specifier: ^9.39.2
       version: 9.39.2
     globals:
-      specifier: ^17.3.0
-      version: 17.3.0
+      specifier: ^17.5.0
+      version: 17.5.0
     jiti:
       specifier: ^2.6.1
       version: 2.6.1
@@ -58,7 +58,7 @@ importers:
         version: 9.39.2(jiti@2.6.1)
       globals:
         specifier: 'catalog:'
-        version: 17.3.0
+        version: 17.5.0
       jiti:
         specifier: 'catalog:'
         version: 2.6.1
@@ -745,8 +745,8 @@ packages:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
 
-  globals@17.3.0:
-    resolution: {integrity: sha512-yMqGUQVVCkD4tqjOJf3TnrvaaHDMYp4VlUSObbkIiuCPe/ofdMBFIAcBbCSRFWOnos6qRiTVStDwqPLUclaxIw==}
+  globals@17.5.0:
+    resolution: {integrity: sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g==}
     engines: {node: '>=18'}
 
   globby@11.1.0:
@@ -2035,7 +2035,7 @@ snapshots:
 
   globals@14.0.0: {}
 
-  globals@17.3.0: {}
+  globals@17.5.0: {}
 
   globby@11.1.0:
     dependencies:
