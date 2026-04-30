@@ -16,6 +16,45 @@ pnpm run lint       # lint all files with ESLint
 pnpm run validate   # validate all rule files against the rule schema
 ```
 
+## Existing Skills
+
+### fastify-best-practise
+
+Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, decorators, authentication, logging, database integration, testing, and TypeScript integration.
+
+Rules are stored in `skills/fastify-best-practise/rules/`:
+
+| Rule                    | File                          | Impact     |
+| ----------------------- | ----------------------------- | ---------- |
+| Configuration           | `configuration.md`            | HIGH       |
+| Create Server           | `create-server.md`            | LOW-MEDIUM |
+| Create Plugin           | `create-plugin.md`            | LOW-MEDIUM |
+| Autoload                | `autoload.md`                 | HIGH       |
+| Route Best Practices    | `route-best-practices.md`     | MEDIUM     |
+| Schema Validation (Zod) | `schema-validation-zod.md`    | HIGH       |
+| Encapsulation           | `encapsulation.md`            | HIGH       |
+| Error Handling          | `error-handling.md`           | HIGH       |
+| Hooks & Lifecycle       | `hooks-lifecycle.md`          | MEDIUM     |
+| Logging                 | `logging.md`                  | HIGH       |
+| Authentication          | `authentication.md`           | HIGH       |
+| Testing                 | `testing.md`                  | HIGH       |
+| TypeScript              | `typescript-integration.md`   | MEDIUM     |
+| Decorators              | `decorators.md`               | MEDIUM     |
+| Content Type Parser     | `content-type-parser.md`      | HIGH       |
+| Database Integration    | `database-integration.md`     | HIGH       |
+| Database Migrations     | `database-migrations.md`      | HIGH       |
+| Test Containers         | `test-containers.md`          | HIGH       |
+| Clean Architecture      | `clean-architecture.md`       | HIGH       |
+| Unit Testing            | `unit-testing.md`             | HIGH       |
+
+When adding a new rule to this skill:
+
+1. Create the rule file in `skills/fastify-best-practise/rules/` following the `_template.md` format.
+2. Add a row to the rules table in `skills/fastify-best-practise/SKILL.md`.
+3. Add the rule to the relevant usage entries in `SKILL.md`.
+4. Update the rules table in `README.md`.
+5. Update the rules table in this file (`AGENTS.md`).
+
 ## Creating a New Skill
 
 ### Directory Structure
