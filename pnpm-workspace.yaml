@@ -8,7 +8,7 @@ catalog:
   "@types/node": ^25.9.2
   eslint: ^9.39.2
   globals: ^17.6.0
-  jiti: ^2.6.1
+  jiti: ^2.7.0
   lefthook: ^2.1.9
   tsx: ^4.22.4
   typescript: ^6.0.3
