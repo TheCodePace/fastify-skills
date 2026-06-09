@@ -7,6 +7,8 @@ tags: migrations, database, postgrator, sql, schema
 
 ## Database Migrations
 
+<!-- Postgrator v5+ -->
+
 Always manage schema changes through plain SQL migration files tracked in version control. Use [Postgrator](https://github.com/rickbergfalk/postgrator) to apply them: it records the current schema version in a `schemaversion` table and runs only the files that have not yet been applied.
 
 Run migrations at application startup (or as a separate CI step) so the database schema is always in sync with the deployed code.
@@ -77,7 +79,7 @@ ALTER TABLE users ADD COLUMN avatar TEXT;
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
-import Postgrator from "postgrator";
+import { Postgrator } from "postgrator";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -156,7 +158,7 @@ This ensures that if a migration fails, the old application version keeps runnin
 **Incorrect (editing an already-applied migration):**
 
 ```sql
--- WRONG: editing 001.do.create-users-table.sql after it has been applied breaks Postgrator's checksum validation
+-- WRONG: editing 001.do.create-users-table.sql after it has been applied causes drift
 ALTER TABLE users ADD COLUMN avatar TEXT;   -- added after the fact
 ```
 
@@ -167,6 +169,6 @@ ALTER TABLE users ADD COLUMN avatar TEXT;   -- added after the fact
 echo "ALTER TABLE users ADD COLUMN avatar TEXT;" > migrations/002.do.add-avatar-to-users.sql
 ```
 
-Postgrator validates file checksums against what was previously applied. Editing an applied file causes migration to fail on the next run.
+Postgrator tracks which migrations have been applied via the `schemaversion` table; editing a file that has already run causes drift on subsequent runs.
 
 Reference: [Postgrator](https://github.com/rickbergfalk/postgrator) | [node-postgres](https://node-postgres.com/)

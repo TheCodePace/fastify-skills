@@ -134,7 +134,10 @@ interface UserFilter {
 }
 
 export async function findUsers(db: pg.Pool, filter: UserFilter) {
-  // Build optional WHERE clauses
+  // Build optional WHERE clauses. We chain each filter with a leading "AND"
+  // against the static "deleted_at IS NULL" clause below. @nearform/sql
+  // splices the sub-query in place, producing valid SQL whether or not
+  // any filter is present.
   const conditions = SQL``;
 
   if (filter.email) {

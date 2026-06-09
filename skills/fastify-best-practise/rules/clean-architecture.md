@@ -92,10 +92,9 @@ export async function createUser(
     throw new EmailAlreadyRegisteredError(email);
   }
 
-  const hashed = await hashPassword(password);
   const { rows } = await db.query<User>(SQL`
-    INSERT INTO users (name, email, password_hash)
-    VALUES (${name.trim()}, ${email.toLowerCase()}, ${hashed})
+    INSERT INTO users (name, email)
+    VALUES (${name.trim()}, ${email.toLowerCase()})
     RETURNING id, name, email
   `);
   return rows[0];

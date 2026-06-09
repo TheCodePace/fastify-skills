@@ -63,6 +63,9 @@ import { createUser } from "../../src/services/users.js";
 import type pg from "pg";
 
 function makeMockDb(overrides: Partial<pg.Pool> = {}): pg.Pool {
+  // The double-cast erases non-test surface (connect, end, on, etc.).
+  // Acceptable in tests because the code under test only calls query().
+  // Never use this pattern in production code — pass a real Pool.
   return {
     query: vi.fn(),
     ...overrides,
@@ -112,7 +115,7 @@ describe("createUser", () => {
     await createUser(db, { name: "Alice", email: "ALICE@EXAMPLE.COM", password: "pass" });
 
     // @nearform/sql builds a parameterized query object — inspect values, not the text
-    const insertCall = queryMock.mock.calls[1][0]; // SqlStatement passed to pool.query()
+    const insertCall = queryMock.mock.calls[1][0]; // { text, values } object passed to pool.query()
     expect(insertCall.values).toContain("alice@example.com");
   });
 });

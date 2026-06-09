@@ -46,7 +46,9 @@ export async function startTestDatabase() {
   const pool = new pg.Pool({ connectionString: connectionUri });
 
   async function stop() {
-    await pool.end();
+    // Do NOT call pool.end() here — the db plugin's onClose hook drains
+    // the pool when the test server calls server.close(). Calling it twice
+    // raises "Called end on pool more than once".
     await container.stop();
   }
 
@@ -58,40 +60,18 @@ export async function startTestDatabase() {
 
 `test/helpers/server.ts`
 
+**Recommended:** pass the database URL via environment variable so the real `db` plugin uses the container. This keeps plugin registration order intact and avoids racing with the plugin's own `decorate("db", ...)` call.
+
 ```ts
+import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import { buildServer } from "../../src/server.js";
-import { startTestDatabase } from "./db.js";
+import { runMigrations } from "../../src/db/migrate.js";
 
-export async function createIntegrationServer() {
-  const { pool, stop } = await startTestDatabase();
-
-  // Override the db plugin by pre-decorating before registration
-  const server = buildServer({ logger: false });
-
-  // Replace the db decorator with our test pool
-  server.decorate("db", pool);
-
-  await server.ready();
-
-  return {
-    server,
-    async close() {
-      await server.close();
-      await stop();
-    },
-  };
-}
-```
-
-Alternatively, pass the database URL via environment variable so the real `db` plugin uses the container:
-
-```ts
 export async function createIntegrationServer() {
   const container = await new PostgreSqlContainer("postgres:17-alpine").start();
   process.env.DATABASE_URL = container.getConnectionUri();
 
   // Migrations must run before the server starts
-  const { runMigrations } = await import("../../src/db/migrate.js");
   await runMigrations(container.getConnectionUri());
 
   const server = buildServer({ logger: false });
@@ -102,6 +82,30 @@ export async function createIntegrationServer() {
     async close() {
       await server.close();
       await container.stop();
+    },
+  };
+}
+```
+
+**ADVANCED** — only use this variant when you need to share a single pool across multiple `buildServer` instances in one test. The pre-decorate approach is fragile: the `db` plugin's own `decorate("db", ...)` call may run first, racing with this override. Prefer the env-var variant above for most cases.
+
+```ts
+import { buildServer } from "../../src/server.js";
+import { startTestDatabase } from "./db.js";
+
+export async function createIntegrationServer() {
+  const { pool, stop } = await startTestDatabase();
+
+  const server = buildServer({ logger: false });
+  server.decorate("db", pool);
+
+  await server.ready();
+
+  return {
+    server,
+    async close() {
+      await server.close();
+      await stop();
     },
   };
 }
