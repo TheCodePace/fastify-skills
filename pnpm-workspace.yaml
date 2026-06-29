@@ -5,7 +5,7 @@ catalog:
   "@changesets/cli": ^2.31.0
   "@eslint/js": ^9.39.2
   "@eslint/markdown": ^8.0.2
-  "@types/node": ^25.9.2
+  "@types/node": ^26.0.1
   eslint: ^9.39.2
   globals: ^17.6.0
   jiti: ^2.7.0
