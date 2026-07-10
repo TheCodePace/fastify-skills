@@ -40,21 +40,3 @@ jobs:
 
       - name: Validate rules
         run: pnpm validate
-
-  automerge:
-    name: Automerge Dependabot PRs
-    if: >
-        always() &&
-        needs.ci.result == 'success' &&
-        github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.full_name == github.repository &&
-        github.event.pull_request.user.login == 'dependabot[bot]'
-    needs: [ci]
-    permissions:
-      pull-requests: write
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - uses: fastify/github-action-merge-dependabot@1b2ed42db8f9d81a46bac83adedfc03eb5149dff # v3.11.2
-        with:
-          target: major

@@ -1,0 +1,29 @@
+name: Automerge Dependabot
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    name: Enable auto-merge for Dependabot PRs
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.pull_requests[0].user.login == 'dependabot[bot]' &&
+      github.event.workflow_run.pull_requests[0].head.repo.full_name == github.repository
+    steps:
+      - name: Enable native auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.workflow_run.pull_requests[0].html_url }}
+        run: |
+          echo "Enabling auto-merge for $PR_URL"
+          gh pr merge --auto --squash --delete-branch "$PR_URL" \
+            || echo "::warning::Could not enable auto-merge (PR may already be merged or closed)"
