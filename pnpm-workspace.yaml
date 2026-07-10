@@ -12,7 +12,7 @@ catalog:
   lefthook: ^2.1.10
   tsx: ^4.22.4
   typescript: ^6.0.3
-  typescript-eslint: ^8.61.0
+  typescript-eslint: ^8.63.0
 
 catalogMode: strict
 cleanupUnusedCatalogs: true
