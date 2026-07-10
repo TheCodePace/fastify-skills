@@ -7,7 +7,7 @@ catalog:
   "@eslint/markdown": ^8.0.3
   "@types/node": ^25.9.2
   eslint: ^9.39.2
-  globals: ^17.6.0
+  globals: ^17.7.0
   jiti: ^2.7.0
   lefthook: ^2.1.10
   tsx: ^4.23.0
