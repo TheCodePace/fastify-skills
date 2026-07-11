@@ -47,6 +47,7 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | Clean Architecture      | `clean-architecture.md`       | HIGH       |
 | Unit Testing            | `unit-testing.md`             | HIGH       |
 | Performance             | `performance.md`              | HIGH       |
+| Rate Limiting           | `rate-limiting.md`            | HIGH       |
 
 When adding a new rule to this skill:
 
