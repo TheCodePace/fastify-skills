@@ -18,6 +18,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Autoload                | HIGH       | Automatically load plugins and routes with `@fastify/autoload`                                                                |
 | Route Best Practices    | MEDIUM     | Organize routes with plugins/prefixes, async handlers, full route options                                                     |
 | Schema Validation (Zod) | HIGH       | Type-safe validation with Zod + `fastify-type-provider-zod`                                                                   |
+| Serialization (Zod)     | HIGH       | Type-safe response serialization with Zod schemas, output validation, and compatibility notes                                  |
 | Encapsulation           | HIGH       | Proper scope isolation and when to use `fastify-plugin`                                                                       |
 | Error Handling          | HIGH       | Custom error handlers, `@fastify/error`, `@fastify/sensible`, 404 handling                                                    |
 | Hooks & Lifecycle       | MEDIUM     | Full lifecycle hook coverage: request pipeline (`onRequest` → `onResponse`), application hooks (`onReady`, `onClose`), scoped hooks |
@@ -33,7 +34,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Clean Architecture      | HIGH       | Pure service-layer functions + thin route handlers; explicit dependency injection                                             |
 | Unit Testing            | HIGH       | Unit-test service functions in isolation with mock database stubs                                                             |
 | Performance             | HIGH       | Schema pre-compilation, serialization, load shedding, streaming, benchmarking                                                 |
-| Rate Limiting           | HIGH       | Protect APIs with `@fastify/rate-limit`, per-route overrides, Redis store, custom keys |
+| Rate Limiting           | HIGH       | Protect APIs with `@fastify/rate-limit`, per-route overrides, Redis store, custom keys                                        |
 | Serialization           | HIGH       | Response serialization with JSON Schema and `fast-json-stringify`                                                             |
 
 ## Installation
