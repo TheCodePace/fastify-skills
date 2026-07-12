@@ -48,6 +48,7 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | Unit Testing            | `unit-testing.md`             | HIGH       |
 | Performance             | `performance.md`              | HIGH       |
 | Rate Limiting           | `rate-limiting.md`            | HIGH       |
+| Serialization           | `serialization.md`            | HIGH       |
 
 When adding a new rule to this skill:
 

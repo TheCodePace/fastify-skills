@@ -41,13 +41,14 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Unit Testing            | [unit-testing.md](rules/unit-testing.md)                     | HIGH       | Unit-test service functions in isolation with mock database stubs                                                                                                  |
 | Performance             | [performance.md](rules/performance.md)                       | HIGH       | Schema pre-compilation, serialization, load shedding, streaming, benchmarking                                                                                      |
 | Rate Limiting           | [rate-limiting.md](rules/rate-limiting.md)                   | HIGH       | Protect APIs with `@fastify/rate-limit`, per-route overrides, Redis store, custom keys |
+| Serialization           | [serialization.md](rules/serialization.md)                   | HIGH       | Response serialization with JSON Schema and `fast-json-stringify`                                                                                                  |
 
 ## Usage
 
 When generating Fastify code, read the relevant rule file(s) for the topic and apply the patterns shown. For a new project, all rules are relevant. For specific tasks, load only what's needed:
 
 - **New project setup**: `create-server.md`, `configuration.md`, `autoload.md`, `encapsulation.md`, `typescript-integration.md`
-- **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`
+- **Adding routes**: `route-best-practices.md`, `autoload.md`, `schema-validation-zod.md`, `serialization.md`
 - **Adding shared services**: `create-plugin.md`, `autoload.md`, `encapsulation.md`
 - **Configuration/environment**: `configuration.md`
 - **Error handling**: `error-handling.md`
@@ -62,6 +63,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Integration tests with a real DB**: `test-containers.md`, `testing.md`
 - **Clean separation of concerns**: `clean-architecture.md`, `unit-testing.md`
 - **Unit testing business logic**: `unit-testing.md`, `clean-architecture.md`
+- **Response serialization**: `serialization.md`, `schema-validation-zod.md`
 
 ## Recommended Project Structure
 
