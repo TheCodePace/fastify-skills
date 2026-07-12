@@ -7,12 +7,16 @@ on:
       - "skills/**/rules/**"
       - "packages/validate-rules/**"
       - "package.json"
+      - "pnpm-workspace.yaml"
+      - "pnpm-lock.yaml"
   pull_request:
     branches: [main]
     paths:
       - "skills/**/rules/**"
       - "packages/validate-rules/**"
       - "package.json"
+      - "pnpm-workspace.yaml"
+      - "pnpm-lock.yaml"
 
 jobs:
   ci:
