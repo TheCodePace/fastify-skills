@@ -29,6 +29,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Decorators              | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply`                         |
 | Content Type Parser     | HIGH       | Custom content type parsers, body limits, multipart uploads, catch-all and regex matching                                     |
 | Multipart & File Uploads | HIGH      | File uploads with `@fastify/multipart`, streaming, size limits, MIME validation                                              |
+| WebSockets               | HIGH      | Real-time bidirectional connections with `@fastify/websocket`, lifecycle handling, broadcasting, and authentication           |
 | Database Integration    | HIGH       | Register a shared `pg` pool as a Fastify plugin; use `@nearform/sql` for safe queries                                         |
 | Database Migrations     | HIGH       | Manage schema changes with Postgrator; run migrations before `server.listen()`                                                |
 | Test Containers         | HIGH       | Spin up real Postgres containers with Testcontainers for isolated integration tests                                           |

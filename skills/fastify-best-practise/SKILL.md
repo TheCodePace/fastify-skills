@@ -36,6 +36,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Decorators              | [decorators.md](rules/decorators.md)                         | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply`                                                              |
 | Content Type Parser     | [content-type-parser.md](rules/content-type-parser.md)       | HIGH       | Custom content type parsers, body limits, multipart uploads, catch-all and regex matching                                                                          |
 | Multipart & File Uploads | [multipart.md](rules/multipart.md)                          | HIGH       | File uploads with `@fastify/multipart`, streaming, size limits, MIME validation                                                                                    |
+| WebSockets               | [websockets.md](rules/websockets.md)                         | HIGH       | Real-time bidirectional connections with `@fastify/websocket`, lifecycle handling, broadcasting, and authentication                                                              |
 | Database Integration    | [database-integration.md](rules/database-integration.md)     | HIGH       | Register a `pg` pool as a Fastify plugin; use `@nearform/sql` for safe queries                                                                                     |
 | Database Migrations     | [database-migrations.md](rules/database-migrations.md)       | HIGH       | Run Postgrator SQL migrations at startup; never modify applied files                                                                                               |
 | Test Containers         | [test-containers.md](rules/test-containers.md)               | HIGH       | Spin up real Postgres containers with Testcontainers for integration tests                                                                                         |
@@ -59,6 +60,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Custom decorators**: `decorators.md`, `typescript-integration.md`
 - **Logging**: `logging.md`
 - **Body parsing/file uploads**: `content-type-parser.md`, `multipart.md`
+- **Real-time / WebSockets**: `websockets.md`, `authentication.md`, `hooks-lifecycle.md`
 - **Performance tuning**: `performance.md`, `schema-validation-zod.md`
 - **Writing tests**: `testing.md`, `create-server.md`
 - **Database setup**: `database-integration.md`, `database-migrations.md`
