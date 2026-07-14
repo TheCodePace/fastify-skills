@@ -42,6 +42,7 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | TypeScript              | `typescript-integration.md`   | MEDIUM     |
 | Decorators              | `decorators.md`               | MEDIUM     |
 | Content Type Parser     | `content-type-parser.md`      | HIGH       |
+| Multipart & File Uploads | `multipart.md`               | HIGH       |
 | Database Integration    | `database-integration.md`     | HIGH       |
 | Database Migrations     | `database-migrations.md`      | HIGH       |
 | Test Containers         | `test-containers.md`          | HIGH       |
