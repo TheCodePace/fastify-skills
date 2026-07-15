@@ -38,6 +38,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Multipart & File Uploads | [multipart.md](rules/multipart.md)                          | HIGH       | File uploads with `@fastify/multipart`, streaming, size limits, MIME validation                                                                                    |
 | WebSockets               | [websockets.md](rules/websockets.md)                         | HIGH       | Real-time bidirectional connections with `@fastify/websocket`, lifecycle handling, broadcasting, and authentication                                                              |
 | HTTP Proxy               | [http-proxy.md](rules/http-proxy.md)                         | HIGH       | API gateway / BFF patterns with `@fastify/http-proxy` and `@fastify/reply-from`, auth hooks, error handling, multi-upstream routing                                            |
+| Type Providers           | [type-providers.md](rules/type-providers.md)                 | HIGH       | Compare TypeBox, `json-schema-to-ts`, and Zod providers; `.withTypeProvider<T>()`; scoped providers in plugins; provider-specific plugin types                                          |
 | Database Integration    | [database-integration.md](rules/database-integration.md)     | HIGH       | Register a `pg` pool as a Fastify plugin; use `@nearform/sql` for safe queries                                                                                     |
 | Database Migrations     | [database-migrations.md](rules/database-migrations.md)       | HIGH       | Run Postgrator SQL migrations at startup; never modify applied files                                                                                               |
 | Test Containers         | [test-containers.md](rules/test-containers.md)               | HIGH       | Spin up real Postgres containers with Testcontainers for integration tests                                                                                         |
@@ -61,6 +62,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Custom decorators**: `decorators.md`, `typescript-integration.md`
 - **Logging**: `logging.md`
 - **Body parsing/file uploads**: `content-type-parser.md`, `multipart.md`
+- **Schema / type providers**: `schema-validation-zod.md`, `serialization-zod.md`, `serialization.md`, `type-providers.md`
 - **Real-time / WebSockets**: `websockets.md`, `authentication.md`, `hooks-lifecycle.md`
 - **API gateway / proxying**: `http-proxy.md`, `hooks-lifecycle.md`, `error-handling.md`
 - **Performance tuning**: `performance.md`, `schema-validation-zod.md`
