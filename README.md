@@ -30,6 +30,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Content Type Parser     | HIGH       | Custom content type parsers, body limits, multipart uploads, catch-all and regex matching                                     |
 | Multipart & File Uploads | HIGH      | File uploads with `@fastify/multipart`, streaming, size limits, MIME validation                                              |
 | WebSockets               | HIGH      | Real-time bidirectional connections with `@fastify/websocket`, lifecycle handling, broadcasting, and authentication           |
+| HTTP Proxy               | HIGH      | API gateway / BFF patterns with `@fastify/http-proxy` and `@fastify/reply-from`, auth hooks, error handling, multi-upstream routing |
 | Database Integration    | HIGH       | Register a shared `pg` pool as a Fastify plugin; use `@nearform/sql` for safe queries                                         |
 | Database Migrations     | HIGH       | Manage schema changes with Postgrator; run migrations before `server.listen()`                                                |
 | Test Containers         | HIGH       | Spin up real Postgres containers with Testcontainers for isolated integration tests                                           |
