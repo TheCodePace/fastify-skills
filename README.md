@@ -34,6 +34,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Type Providers           | HIGH      | Compare TypeBox, `json-schema-to-ts`, and Zod providers; `.withTypeProvider<T>()`; scoped providers in plugins                              |
 | Deployment               | HIGH      | Graceful shutdown with `close-with-grace`, liveness/readiness probes, listen on `0.0.0.0`, `trustProxy`, multi-stage Dockerfile, AWS Lambda adapter |
 | HTTP/2                   | MEDIUM    | Enable HTTP/2 over TLS (`h2`) with HTTP/1.1 fallback, or plain-text `h2c` for internal services                                          |
+| CORS & Security Headers  | HIGH      | `@fastify/cors` allow-list (static and dynamic), `@fastify/helmet` CSP/HSTS, registration order, combined security plugin                            |
 | Database Integration    | HIGH       | Register a shared `pg` pool as a Fastify plugin; use `@nearform/sql` for safe queries                                         |
 | Database Migrations     | HIGH       | Manage schema changes with Postgrator; run migrations before `server.listen()`                                                |
 | Test Containers         | HIGH       | Spin up real Postgres containers with Testcontainers for isolated integration tests                                           |
