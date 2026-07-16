@@ -46,6 +46,7 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | WebSockets               | `websockets.md`              | HIGH       |
 | HTTP Proxy               | `http-proxy.md`              | HIGH       |
 | Type Providers           | `type-providers.md`          | HIGH       |
+| Deployment               | `deployment.md`              | HIGH       |
 | Database Integration    | `database-integration.md`     | HIGH       |
 | Database Migrations     | `database-migrations.md`      | HIGH       |
 | Test Containers         | `test-containers.md`          | HIGH       |
