@@ -381,8 +381,9 @@ app.register(async function routes(instance) {
 ```ts
 import Fastify from "fastify";
 import {
-  validatorCompiler,
   serializerCompiler,
+  validatorCompiler,
+  type FastifyPluginAsyncZod,
   type ZodTypeProvider,
 } from "fastify-type-provider-zod";
 import { z } from "zod";
@@ -407,6 +408,31 @@ server.register(async function routes(instance) {
     },
   );
 });
+
+// Option 2: Use the provider-specific plugin type — typed `fastify` argument
+const typedRoutes: FastifyPluginAsyncZod = async function (fastify) {
+  fastify.get(
+    "/users",
+    {
+      schema: {
+        querystring: z.object({ page: z.coerce.number().default(1) }),
+      },
+    },
+    async (request) => {
+      // request.query.page → number — no .withTypeProvider() call needed
+      return getUsers(request.query.page);
+    },
+  );
+};
+
+server.register(typedRoutes);
+```
+
+The same provider-specific plugin types exist for the other providers:
+
+```ts
+import { FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
+import { FastifyPluginAsyncJsonSchemaToTs } from "@fastify/type-provider-json-schema-to-ts";
 ```
 
 Reference: [Fastify Type Providers](https://fastify.dev/docs/latest/Reference/Type-Providers/) | [Write a Type Provider](https://fastify.dev/docs/latest/Guides/Write-Type-Provider/) | [@fastify/type-provider-typebox](https://github.com/fastify/fastify-type-provider-typebox) | [@fastify/type-provider-json-schema-to-ts](https://github.com/fastify/fastify-type-provider-json-schema-to-ts) | [fastify-type-provider-zod](https://github.com/turkerdev/fastify-type-provider-zod)
