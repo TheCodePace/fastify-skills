@@ -10,35 +10,33 @@
   "bugs": {
     "url": "https://github.com/TheCodePace/fastify-skills/issues"
   },
+  "license": "MIT",
+  "author": "The Red Code",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TheCodePace/fastify-skills.git"
   },
-  "license": "MIT",
-  "author": "The Red Code",
+  "workspaces": [
+    "packages/*"
+  ],
   "type": "module",
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
     "validate": "pnpm --filter @thecodepace/validate-rules validate",
     "version": "changeset version",
     "release": "changeset tag"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
-    "@eslint/js": "catalog:",
-    "@eslint/markdown": "catalog:",
-    "eslint": "catalog:",
-    "globals": "catalog:",
-    "jiti": "catalog:",
     "lefthook": "catalog:",
-    "typescript-eslint": "catalog:"
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:"
   },
-  "packageManager": "pnpm@10.30.1",
-  "workspaces": [
-    "packages/*"
-  ],
   "engines": {
     "node": "24"
-  }
+  },
+  "packageManager": "pnpm@10.30.1"
 }

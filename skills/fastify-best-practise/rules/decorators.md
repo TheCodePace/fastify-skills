@@ -69,9 +69,12 @@ fastify.get("/profile", async (request) => {
 **Correct (add a helper method to every reply):**
 
 ```ts
-fastify.decorateReply("sendError", function (this: FastifyReply, statusCode: number, message: string) {
-  return this.status(statusCode).send({ error: message });
-});
+fastify.decorateReply(
+  "sendError",
+  function (this: FastifyReply, statusCode: number, message: string) {
+    return this.status(statusCode).send({ error: message });
+  },
+);
 
 fastify.get("/protected", async (request, reply) => {
   if (!request.headers.authorization) {

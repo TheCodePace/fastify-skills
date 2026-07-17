@@ -93,9 +93,7 @@ import { pipeline } from "node:stream/promises";
 const server = Fastify({ logger: true });
 
 server.get("/users/:id", async (request, reply) => {
-  const response = await fetch(
-    `http://backend:3001/api/users/${request.params.id}`,
-  );
+  const response = await fetch(`http://backend:3001/api/users/${request.params.id}`);
   reply.status(response.status);
   await pipeline(response.body, reply.raw);
 });

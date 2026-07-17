@@ -20,5 +20,7 @@
 pre-commit:
   parallel: true
   jobs:
-    - run: npx eslint {staged_files}
-      glob: "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,md}"
+    - run: npx oxlint {staged_files}
+      glob: "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"
+    - run: npx oxfmt {staged_files}
+      glob: "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,md,json,jsonc}"

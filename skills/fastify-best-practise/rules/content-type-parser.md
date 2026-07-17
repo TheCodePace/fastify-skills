@@ -68,13 +68,9 @@ import Fastify from "fastify";
 // WRONG: no bodyLimit — accepts arbitrarily large payloads
 const app = Fastify();
 
-app.addContentTypeParser(
-  "application/json",
-  { parseAs: "string" },
-  async (request, body) => {
-    return JSON.parse(body as string);
-  },
-);
+app.addContentTypeParser("application/json", { parseAs: "string" }, async (request, body) => {
+  return JSON.parse(body as string);
+});
 ```
 
 **Correct (set explicit body limits globally, per route, or per content type):**
@@ -88,19 +84,27 @@ const app = Fastify({
 });
 
 // Per content type limit
-app.addContentTypeParser("application/json", {
-  parseAs: "string",
-  bodyLimit: 2097152, // 2 MB for JSON
-}, async (request, body) => {
-  return JSON.parse(body as string);
-});
+app.addContentTypeParser(
+  "application/json",
+  {
+    parseAs: "string",
+    bodyLimit: 2097152, // 2 MB for JSON
+  },
+  async (request, body) => {
+    return JSON.parse(body as string);
+  },
+);
 
 // Per route limit
-app.post("/large-upload", {
-  bodyLimit: 52428800, // 50 MB for this route only
-}, async (request) => {
-  return { size: JSON.stringify(request.body).length };
-});
+app.post(
+  "/large-upload",
+  {
+    bodyLimit: 52428800, // 50 MB for this route only
+  },
+  async (request) => {
+    return { size: JSON.stringify(request.body).length };
+  },
+);
 ```
 
 ### Custom JSON Parser with Error Handling
@@ -110,14 +114,10 @@ app.post("/large-upload", {
 ```typescript
 app.removeContentTypeParser("application/json");
 
-app.addContentTypeParser(
-  "application/json",
-  { parseAs: "string" },
-  async (request, body) => {
-    // WRONG: no error handling — throws unstructured errors
-    return JSON.parse(body as string);
-  },
-);
+app.addContentTypeParser("application/json", { parseAs: "string" }, async (request, body) => {
+  // WRONG: no error handling — throws unstructured errors
+  return JSON.parse(body as string);
+});
 ```
 
 **Correct (use `@fastify/error` for typed, reusable errors):**
@@ -125,25 +125,17 @@ app.addContentTypeParser(
 ```typescript
 import createError from "@fastify/error";
 
-const InvalidJsonError = createError(
-  "INVALID_JSON",
-  "Invalid JSON payload",
-  400,
-);
+const InvalidJsonError = createError("INVALID_JSON", "Invalid JSON payload", 400);
 
 app.removeContentTypeParser("application/json");
 
-app.addContentTypeParser(
-  "application/json",
-  { parseAs: "string" },
-  async (request, body) => {
-    try {
-      return JSON.parse(body as string);
-    } catch {
-      throw new InvalidJsonError();
-    }
-  },
-);
+app.addContentTypeParser("application/json", { parseAs: "string" }, async (request, body) => {
+  try {
+    return JSON.parse(body as string);
+  } catch {
+    throw new InvalidJsonError();
+  }
+});
 ```
 
 ### Multipart Form Data
@@ -171,9 +163,9 @@ import fastifyMultipart from "@fastify/multipart";
 app.register(fastifyMultipart, {
   limits: {
     fieldNameSize: 100,
-    fieldSize: 1024 * 1024,       // 1 MB
+    fieldSize: 1024 * 1024, // 1 MB
     fields: 10,
-    fileSize: 10 * 1024 * 1024,   // 10 MB
+    fileSize: 10 * 1024 * 1024, // 10 MB
     files: 5,
     headerPairs: 2000,
     parts: 1000,
@@ -258,12 +250,9 @@ app.addContentTypeParser(
 import { pipeline } from "node:stream/promises";
 import { createWriteStream } from "node:fs";
 
-app.addContentTypeParser(
-  "application/octet-stream",
-  async (request, payload) => {
-    return payload; // Return stream directly
-  },
-);
+app.addContentTypeParser("application/octet-stream", async (request, payload) => {
+  return payload; // Return stream directly
+});
 
 app.post("/upload-stream", async (request) => {
   const destination = createWriteStream("/tmp/upload.bin");

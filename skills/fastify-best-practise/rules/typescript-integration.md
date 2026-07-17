@@ -127,10 +127,7 @@ interface CachePluginOptions {
   maxSize: number;
 }
 
-async function cachePlugin(
-  fastify: FastifyInstance,
-  options: CachePluginOptions,
-) {
+async function cachePlugin(fastify: FastifyInstance, options: CachePluginOptions) {
   const cache = new Map<string, { value: unknown; expires: number }>();
 
   fastify.decorate("cache", {

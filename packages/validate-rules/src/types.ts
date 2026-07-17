@@ -2,13 +2,7 @@
  * Type definitions for Fastify best practice rules
  */
 
-export type ImpactLevel =
-  | "CRITICAL"
-  | "HIGH"
-  | "MEDIUM-HIGH"
-  | "MEDIUM"
-  | "LOW-MEDIUM"
-  | "LOW";
+export type ImpactLevel = "CRITICAL" | "HIGH" | "MEDIUM-HIGH" | "MEDIUM" | "LOW-MEDIUM" | "LOW";
 
 export interface CodeExample {
   label: string;

@@ -176,29 +176,37 @@ Keep reusable schemas close to the resource, export shared schemas from a `schem
 
 ```ts
 export default async function userRoutes(fastify) {
-  fastify.get("/:id", {
-    schema: {
-      params: z.object({ id: z.string().uuid() }),
-      response: {
-        200: z.object({ id: z.string().uuid(), name: z.string() }),
+  fastify.get(
+    "/:id",
+    {
+      schema: {
+        params: z.object({ id: z.string().uuid() }),
+        response: {
+          200: z.object({ id: z.string().uuid(), name: z.string() }),
+        },
       },
     },
-  }, async (request) => {
-    const params = request.params as { id: string };
-    return findUser(params.id);
-  });
+    async (request) => {
+      const params = request.params as { id: string };
+      return findUser(params.id);
+    },
+  );
 
-  fastify.post("/", {
-    schema: {
-      body: z.object({ name: z.string().min(1) }),
-      response: {
-        201: z.object({ id: z.string().uuid(), name: z.string() }),
+  fastify.post(
+    "/",
+    {
+      schema: {
+        body: z.object({ name: z.string().min(1) }),
+        response: {
+          201: z.object({ id: z.string().uuid(), name: z.string() }),
+        },
       },
     },
-  }, async (request, reply) => {
-    reply.status(201);
-    return createUser(request.body as { name: string });
-  });
+    async (request, reply) => {
+      reply.status(201);
+      return createUser(request.body as { name: string });
+    },
+  );
 }
 ```
 
@@ -207,10 +215,7 @@ export default async function userRoutes(fastify) {
 ```ts
 // src/plugins/zod.ts
 import fp from "fastify-plugin";
-import {
-  serializerCompiler,
-  validatorCompiler,
-} from "fastify-type-provider-zod";
+import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
 export default fp(async function zodPlugin(fastify) {
   fastify.setValidatorCompiler(validatorCompiler);
@@ -241,11 +246,7 @@ export const userResponseSchema = z.object({
 ```ts
 // src/routes/users/index.ts
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
-import {
-  createUserSchema,
-  userParamsSchema,
-  userResponseSchema,
-} from "./schema.js";
+import { createUserSchema, userParamsSchema, userResponseSchema } from "./schema.js";
 
 const userRoutes: FastifyPluginAsyncZod = async (fastify) => {
   fastify.get(

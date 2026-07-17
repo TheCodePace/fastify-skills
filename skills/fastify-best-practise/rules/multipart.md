@@ -18,19 +18,16 @@ import Fastify from "fastify";
 
 const server = Fastify();
 
-server.addContentTypeParser(
-  "multipart/form-data",
-  function (request, payload, done) {
-    // Manual multipart parsing is error-prone and insecure
-    let data = "";
-    payload.on("data", (chunk) => {
-      data += chunk;
-    });
-    payload.on("end", () => {
-      done(null, data);
-    });
-  },
-);
+server.addContentTypeParser("multipart/form-data", function (request, payload, done) {
+  // Manual multipart parsing is error-prone and insecure
+  let data = "";
+  payload.on("data", (chunk) => {
+    data += chunk;
+  });
+  payload.on("end", () => {
+    done(null, data);
+  });
+});
 ```
 
 **Correct (register `@fastify/multipart` as a shared plugin):**
@@ -191,12 +188,7 @@ export default profileRoutes;
 **Correct (check MIME type and file extension before processing):**
 
 ```ts
-const ALLOWED_MIME_TYPES = new Set([
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "application/pdf",
-]);
+const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "application/pdf"]);
 
 const ALLOWED_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".pdf"]);
 

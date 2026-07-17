@@ -1,3 +1,8 @@
+# Auto-merge Dependabot PRs once CI passes.
+# Patch and minor updates are auto-merged (squash, delete-branch).
+# Major updates are intentionally skipped so a human can review the
+# breaking-change implications before the PR is merged.
+
 name: Automerge Dependabot
 
 on:
@@ -11,7 +16,7 @@ permissions:
 
 jobs:
   automerge:
-    name: Enable auto-merge for Dependabot PRs
+    name: Enable auto-merge for Dependabot PRs (skip major)
     runs-on: ubuntu-latest
     if: >
       github.event.workflow_run.conclusion == 'success' &&
@@ -19,11 +24,36 @@ jobs:
       github.event.workflow_run.pull_requests[0].user.login == 'dependabot[bot]' &&
       github.event.workflow_run.pull_requests[0].head.repo.full_name == github.repository
     steps:
-      - name: Enable native auto-merge
+      - name: Fetch PR body and detect semver-major
+        id: detect
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.workflow_run.pull_requests[0].html_url }}
         run: |
-          echo "Enabling auto-merge for $PR_URL"
-          gh pr merge --auto --squash --delete-branch "$PR_URL" \
-            || echo "::warning::Could not enable auto-merge (PR may already be merged or closed)"
+          set -euo pipefail
+          PR_NUMBER="$(printf '%s' "$PR_URL" | sed -E 's#.*/pull/([0-9]+).*#\1#')"
+          echo "PR number: ${PR_NUMBER}"
+          BODY="$(gh pr view "$PR_NUMBER" --json body --jq '.body')"
+          # Hard fail closed if the body can't be fetched.
+          if [ -z "$BODY" ]; then
+            echo "::error::Could not fetch PR body for ${PR_URL}; skipping auto-merge."
+            exit 0
+          fi
+          # Any package with a semver-major update inside this PR means
+          # we treat the whole PR as requiring manual review.
+          if printf '%s' "$BODY" | grep -Eq '^[[:space:]]*update-type:[[:space:]]*version-update:semver-major'; then
+            echo "PR contains a semver-major update; skipping auto-merge for manual review."
+            echo "is_major=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "is_major=false" >> "$GITHUB_OUTPUT"
+
+      - name: Enable native auto-merge
+        if: steps.detect.outputs.is_major == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.workflow_run.pull_requests[0].html_url }}
+        run: |
+          set -euo pipefail
+          echo "Enabling auto-merge for ${PR_URL}"
+          gh pr merge --auto --squash --delete-branch "$PR_URL"

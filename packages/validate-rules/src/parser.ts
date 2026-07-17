@@ -76,9 +76,7 @@ export async function parseRuleFile(filePath: string): Promise<ParsedRule> {
 
     // Impact line
     if (line.includes("**Impact:")) {
-      const match = line.match(
-        /\*\*Impact:\s*(\w+(?:-\w+)?)\s*(?:\(([^)]+)\))?/i,
-      );
+      const match = line.match(/\*\*Impact:\s*(\w+(?:-\w+)?)\s*(?:\(([^)]+)\))?/i);
       if (match) {
         impact = match[1].toUpperCase().replace(/-/g, "-") as ImpactLevel;
         impactDescription = match[2] || "";
@@ -125,9 +123,7 @@ export async function parseRuleFile(filePath: string): Promise<ParsedRule> {
       hasCodeBlockForCurrentExample = false;
 
       const fullLabel = labelMatch[1].trim();
-      const descMatch = fullLabel.match(
-        /^([A-Za-z]+(?:\s+[A-Za-z]+)*)\s*\(([^()]+)\)$/,
-      );
+      const descMatch = fullLabel.match(/^([A-Za-z]+(?:\s+[A-Za-z]+)*)\s*\(([^()]+)\)$/);
       currentExample = {
         label: descMatch ? descMatch[1].trim() : fullLabel,
         description: descMatch ? descMatch[2].trim() : undefined,
@@ -164,10 +160,7 @@ export async function parseRuleFile(filePath: string): Promise<ParsedRule> {
     if (line.trim() && !line.startsWith("#")) {
       if (!currentExample && !inCodeBlock) {
         explanation += (explanation ? "\n\n" : "") + line;
-      } else if (
-        currentExample &&
-        (afterCodeBlock || !hasCodeBlockForCurrentExample)
-      ) {
+      } else if (currentExample && (afterCodeBlock || !hasCodeBlockForCurrentExample)) {
         additionalText.push(line);
       }
     }
@@ -184,18 +177,15 @@ export async function parseRuleFile(filePath: string): Promise<ParsedRule> {
   const rule: Rule = {
     title: frontmatter.title || title,
     impact: (frontmatter.impact as ImpactLevel) || impact,
-    impactDescription:
-      frontmatter.impactDescription || impactDescription || undefined,
+    impactDescription: frontmatter.impactDescription || impactDescription || undefined,
     explanation: frontmatter.explanation || explanation.trim(),
     examples,
     references: frontmatter.references
       ? frontmatter.references.split(",").map((r: string) => r.trim())
       : references.length > 0
-      ? references
-      : undefined,
-    tags: frontmatter.tags
-      ? frontmatter.tags.split(",").map((t: string) => t.trim())
-      : undefined,
+        ? references
+        : undefined,
+    tags: frontmatter.tags ? frontmatter.tags.split(",").map((t: string) => t.trim()) : undefined,
   };
 
   return { rule };

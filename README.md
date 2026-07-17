@@ -10,40 +10,40 @@ Skills follow the [Agent Skills](https://agentskills.io/) format.
 
 Apply Fastify best practices when creating servers, plugins, routes, schemas, hooks, configuration, decorators, authentication, logging, performance tuning, database integration, migrations, testing, clean architecture, and TypeScript integration.
 
-| Rule                    | Impact     | Description                                                                                                                   |
-| ----------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Configuration           | HIGH       | Environment config, logger setup, security options, and graceful shutdown                                                     |
-| Create Server           | LOW-MEDIUM | Use a `buildServer()` factory function for reusable, testable server setup                                                    |
-| Create Plugin           | LOW-MEDIUM | Encapsulate reusable functionality in plugins with `fastify-plugin`                                                           |
-| Autoload                | HIGH       | Automatically load plugins and routes with `@fastify/autoload`                                                                |
-| Route Best Practices    | MEDIUM     | Organize routes with plugins/prefixes, async handlers, full route options                                                     |
-| Schema Validation (Zod) | HIGH       | Type-safe validation with Zod + `fastify-type-provider-zod`                                                                   |
-| Serialization (Zod)     | HIGH       | Type-safe response serialization with Zod schemas, output validation, and compatibility notes                                  |
-| Encapsulation           | HIGH       | Proper scope isolation and when to use `fastify-plugin`                                                                       |
-| Error Handling          | HIGH       | Custom error handlers, `@fastify/error`, `@fastify/sensible`, 404 handling                                                    |
-| Hooks & Lifecycle       | MEDIUM     | Full lifecycle hook coverage: request pipeline (`onRequest` → `onResponse`), application hooks (`onReady`, `onClose`), scoped hooks |
-| Logging                 | HIGH       | Built-in Pino logger, request correlation, redaction, child loggers                                                           |
-| Authentication          | HIGH       | JWT auth with `@fastify/jwt`, multi-strategy with `@fastify/auth`                                                             |
-| Testing                 | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                                                                   |
-| TypeScript              | MEDIUM     | Type providers, module augmentation, typed decorators                                                                         |
-| Decorators              | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply`                         |
-| Content Type Parser     | HIGH       | Custom content type parsers, body limits, multipart uploads, catch-all and regex matching                                     |
-| Multipart & File Uploads | HIGH      | File uploads with `@fastify/multipart`, streaming, size limits, MIME validation                                              |
-| WebSockets               | HIGH      | Real-time bidirectional connections with `@fastify/websocket`, lifecycle handling, broadcasting, and authentication           |
-| HTTP Proxy               | HIGH      | API gateway / BFF patterns with `@fastify/http-proxy` and `@fastify/reply-from`, auth hooks, error handling, multi-upstream routing |
-| Type Providers           | HIGH      | Compare TypeBox, `json-schema-to-ts`, and Zod providers; `.withTypeProvider<T>()`; scoped providers in plugins                              |
-| Deployment               | HIGH      | Graceful shutdown with `close-with-grace`, liveness/readiness probes, listen on `0.0.0.0`, `trustProxy`, multi-stage Dockerfile, AWS Lambda adapter |
-| HTTP/2                   | MEDIUM    | Enable HTTP/2 over TLS (`h2`) with HTTP/1.1 fallback, or plain-text `h2c` for internal services                                          |
-| CORS & Security Headers  | HIGH      | `@fastify/cors` allow-list (static and dynamic), `@fastify/helmet` CSP/HSTS, registration order, combined security plugin                            |
-| Delay Accepting Requests | HIGH      | Reject requests with 503 until dependencies are ready; liveness vs. readiness probes for Kubernetes                             |
-| Database Integration    | HIGH       | Register a shared `pg` pool as a Fastify plugin; use `@nearform/sql` for safe queries                                         |
-| Database Migrations     | HIGH       | Manage schema changes with Postgrator; run migrations before `server.listen()`                                                |
-| Test Containers         | HIGH       | Spin up real Postgres containers with Testcontainers for isolated integration tests                                           |
-| Clean Architecture      | HIGH       | Pure service-layer functions + thin route handlers; explicit dependency injection                                             |
-| Unit Testing            | HIGH       | Unit-test service functions in isolation with mock database stubs                                                             |
-| Performance             | HIGH       | Schema pre-compilation, serialization, load shedding, streaming, benchmarking                                                 |
-| Rate Limiting           | HIGH       | Protect APIs with `@fastify/rate-limit`, per-route overrides, Redis store, custom keys                                        |
-| Serialization           | HIGH       | Response serialization with JSON Schema and `fast-json-stringify`                                                             |
+| Rule                     | Impact     | Description                                                                                                                                         |
+| ------------------------ | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Configuration            | HIGH       | Environment config, logger setup, security options, and graceful shutdown                                                                           |
+| Create Server            | LOW-MEDIUM | Use a `buildServer()` factory function for reusable, testable server setup                                                                          |
+| Create Plugin            | LOW-MEDIUM | Encapsulate reusable functionality in plugins with `fastify-plugin`                                                                                 |
+| Autoload                 | HIGH       | Automatically load plugins and routes with `@fastify/autoload`                                                                                      |
+| Route Best Practices     | MEDIUM     | Organize routes with plugins/prefixes, async handlers, full route options                                                                           |
+| Schema Validation (Zod)  | HIGH       | Type-safe validation with Zod + `fastify-type-provider-zod`                                                                                         |
+| Serialization (Zod)      | HIGH       | Type-safe response serialization with Zod schemas, output validation, and compatibility notes                                                       |
+| Encapsulation            | HIGH       | Proper scope isolation and when to use `fastify-plugin`                                                                                             |
+| Error Handling           | HIGH       | Custom error handlers, `@fastify/error`, `@fastify/sensible`, 404 handling                                                                          |
+| Hooks & Lifecycle        | MEDIUM     | Full lifecycle hook coverage: request pipeline (`onRequest` → `onResponse`), application hooks (`onReady`, `onClose`), scoped hooks                 |
+| Logging                  | HIGH       | Built-in Pino logger, request correlation, redaction, child loggers                                                                                 |
+| Authentication           | HIGH       | JWT auth with `@fastify/jwt`, multi-strategy with `@fastify/auth`                                                                                   |
+| Testing                  | HIGH       | Test with `inject()`, buildServer pattern, vitest/node:test                                                                                         |
+| TypeScript               | MEDIUM     | Type providers, module augmentation, typed decorators                                                                                               |
+| Decorators               | MEDIUM     | Extend the Fastify instance, request, and reply with `decorate` / `decorateRequest` / `decorateReply`                                               |
+| Content Type Parser      | HIGH       | Custom content type parsers, body limits, multipart uploads, catch-all and regex matching                                                           |
+| Multipart & File Uploads | HIGH       | File uploads with `@fastify/multipart`, streaming, size limits, MIME validation                                                                     |
+| WebSockets               | HIGH       | Real-time bidirectional connections with `@fastify/websocket`, lifecycle handling, broadcasting, and authentication                                 |
+| HTTP Proxy               | HIGH       | API gateway / BFF patterns with `@fastify/http-proxy` and `@fastify/reply-from`, auth hooks, error handling, multi-upstream routing                 |
+| Type Providers           | HIGH       | Compare TypeBox, `json-schema-to-ts`, and Zod providers; `.withTypeProvider<T>()`; scoped providers in plugins                                      |
+| Deployment               | HIGH       | Graceful shutdown with `close-with-grace`, liveness/readiness probes, listen on `0.0.0.0`, `trustProxy`, multi-stage Dockerfile, AWS Lambda adapter |
+| HTTP/2                   | MEDIUM     | Enable HTTP/2 over TLS (`h2`) with HTTP/1.1 fallback, or plain-text `h2c` for internal services                                                     |
+| CORS & Security Headers  | HIGH       | `@fastify/cors` allow-list (static and dynamic), `@fastify/helmet` CSP/HSTS, registration order, combined security plugin                           |
+| Delay Accepting Requests | HIGH       | Reject requests with 503 until dependencies are ready; liveness vs. readiness probes for Kubernetes                                                 |
+| Database Integration     | HIGH       | Register a shared `pg` pool as a Fastify plugin; use `@nearform/sql` for safe queries                                                               |
+| Database Migrations      | HIGH       | Manage schema changes with Postgrator; run migrations before `server.listen()`                                                                      |
+| Test Containers          | HIGH       | Spin up real Postgres containers with Testcontainers for isolated integration tests                                                                 |
+| Clean Architecture       | HIGH       | Pure service-layer functions + thin route handlers; explicit dependency injection                                                                   |
+| Unit Testing             | HIGH       | Unit-test service functions in isolation with mock database stubs                                                                                   |
+| Performance              | HIGH       | Schema pre-compilation, serialization, load shedding, streaming, benchmarking                                                                       |
+| Rate Limiting            | HIGH       | Protect APIs with `@fastify/rate-limit`, per-route overrides, Redis store, custom keys                                                              |
+| Serialization            | HIGH       | Response serialization with JSON Schema and `fast-json-stringify`                                                                                   |
 
 ## Installation
 

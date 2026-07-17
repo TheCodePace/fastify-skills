@@ -79,10 +79,7 @@ const EmailAlreadyRegisteredError = createError(
   409,
 );
 
-export async function createUser(
-  db: pg.Pool,
-  input: CreateUserInput,
-): Promise<User> {
+export async function createUser(db: pg.Pool, input: CreateUserInput): Promise<User> {
   const { name, email, password } = input;
 
   const { rows: existing } = await db.query(
@@ -134,10 +131,8 @@ import { CreateUserBody, UserResponse } from "./schema.js";
 import { createUser, listUsers } from "../../services/users.js";
 
 const userRoutes: FastifyPluginAsyncZod = async (fastify) => {
-  fastify.get(
-    "/",
-    { schema: { response: { 200: UserResponse.array() } } },
-    async () => listUsers(fastify.db),
+  fastify.get("/", { schema: { response: { 200: UserResponse.array() } } }, async () =>
+    listUsers(fastify.db),
   );
 
   fastify.post(

@@ -74,7 +74,11 @@ const userSchema = {
 };
 
 // Schema is compiled separately for every route that inlines it
-server.get("/users", { schema: { response: { 200: { type: "array", items: userSchema } } } }, handler);
+server.get(
+  "/users",
+  { schema: { response: { 200: { type: "array", items: userSchema } } } },
+  handler,
+);
 server.get("/users/:id", { schema: { response: { 200: userSchema } } }, handler);
 ```
 
@@ -97,11 +101,7 @@ server.get(
   handler,
 );
 
-server.get(
-  "/users/:id",
-  { schema: { response: { 200: { $ref: "User#" } } } },
-  handler,
-);
+server.get("/users/:id", { schema: { response: { 200: { $ref: "User#" } } } }, handler);
 ```
 
 ### Use `@fastify/under-pressure` for Load Shedding

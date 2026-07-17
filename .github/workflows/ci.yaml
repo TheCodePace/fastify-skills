@@ -18,6 +18,12 @@ on:
       - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
 
+# Cancel in-progress runs for the same ref so Dependabot PR re-pushes
+# don't pile up redundant CI runs.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -32,8 +38,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version-file: 'package.json'
-          cache: 'pnpm'
+          node-version-file: "package.json"
+          cache: "pnpm"
           check-latest: true
 
       - name: Install dependencies
@@ -41,6 +47,9 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Format check
+        run: pnpm format:check
 
       - name: Validate rules
         run: pnpm validate

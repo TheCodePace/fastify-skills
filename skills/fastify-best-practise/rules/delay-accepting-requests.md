@@ -129,10 +129,7 @@ fastify.addHook("onRequest", async (request, reply) => {
     return; // allow health checks through
   }
   if (!fastify.isReady) {
-    return reply
-      .status(503)
-      .header("Retry-After", "5")
-      .send({ error: "Service Unavailable" });
+    return reply.status(503).header("Retry-After", "5").send({ error: "Service Unavailable" });
   }
 });
 
@@ -162,10 +159,7 @@ declare module "fastify" {
   }
 }
 
-async function readinessPlugin(
-  fastify: FastifyInstance,
-  opts: { healthPaths?: string[] },
-) {
+async function readinessPlugin(fastify: FastifyInstance, opts: { healthPaths?: string[] }) {
   const skip = new Set(opts.healthPaths ?? ["/healthz", "/readyz"]);
 
   fastify.decorate("isReady", false);
@@ -173,10 +167,7 @@ async function readinessPlugin(
   fastify.addHook("onRequest", async (request, reply) => {
     if (skip.has(request.routeOptions.url)) return;
     if (!fastify.isReady) {
-      return reply
-        .status(503)
-        .header("Retry-After", "5")
-        .send({ error: "Service Unavailable" });
+      return reply.status(503).header("Retry-After", "5").send({ error: "Service Unavailable" });
     }
   });
 

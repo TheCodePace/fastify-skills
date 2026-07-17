@@ -24,40 +24,40 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 
 Rules are stored in `skills/fastify-best-practise/rules/`:
 
-| Rule                    | File                          | Impact     |
-| ----------------------- | ----------------------------- | ---------- |
-| Configuration           | `configuration.md`            | HIGH       |
-| Create Server           | `create-server.md`            | LOW-MEDIUM |
-| Create Plugin           | `create-plugin.md`            | LOW-MEDIUM |
-| Autoload                | `autoload.md`                 | HIGH       |
-| Route Best Practices    | `route-best-practices.md`     | MEDIUM     |
-| Schema Validation (Zod) | `schema-validation-zod.md`    | HIGH       |
-| Serialization (Zod)     | `serialization-zod.md`        | HIGH       |
-| Encapsulation           | `encapsulation.md`            | HIGH       |
-| Error Handling          | `error-handling.md`           | HIGH       |
-| Hooks & Lifecycle       | `hooks-lifecycle.md`          | MEDIUM     |
-| Logging                 | `logging.md`                  | HIGH       |
-| Authentication          | `authentication.md`           | HIGH       |
-| Testing                 | `testing.md`                  | HIGH       |
-| TypeScript              | `typescript-integration.md`   | MEDIUM     |
-| Decorators              | `decorators.md`               | MEDIUM     |
-| Content Type Parser     | `content-type-parser.md`      | HIGH       |
-| Multipart & File Uploads | `multipart.md`               | HIGH       |
-| WebSockets               | `websockets.md`              | HIGH       |
-| HTTP Proxy               | `http-proxy.md`              | HIGH       |
-| Type Providers           | `type-providers.md`          | HIGH       |
-| Deployment               | `deployment.md`              | HIGH       |
+| Rule                     | File                          | Impact     |
+| ------------------------ | ----------------------------- | ---------- |
+| Configuration            | `configuration.md`            | HIGH       |
+| Create Server            | `create-server.md`            | LOW-MEDIUM |
+| Create Plugin            | `create-plugin.md`            | LOW-MEDIUM |
+| Autoload                 | `autoload.md`                 | HIGH       |
+| Route Best Practices     | `route-best-practices.md`     | MEDIUM     |
+| Schema Validation (Zod)  | `schema-validation-zod.md`    | HIGH       |
+| Serialization (Zod)      | `serialization-zod.md`        | HIGH       |
+| Encapsulation            | `encapsulation.md`            | HIGH       |
+| Error Handling           | `error-handling.md`           | HIGH       |
+| Hooks & Lifecycle        | `hooks-lifecycle.md`          | MEDIUM     |
+| Logging                  | `logging.md`                  | HIGH       |
+| Authentication           | `authentication.md`           | HIGH       |
+| Testing                  | `testing.md`                  | HIGH       |
+| TypeScript               | `typescript-integration.md`   | MEDIUM     |
+| Decorators               | `decorators.md`               | MEDIUM     |
+| Content Type Parser      | `content-type-parser.md`      | HIGH       |
+| Multipart & File Uploads | `multipart.md`                | HIGH       |
+| WebSockets               | `websockets.md`               | HIGH       |
+| HTTP Proxy               | `http-proxy.md`               | HIGH       |
+| Type Providers           | `type-providers.md`           | HIGH       |
+| Deployment               | `deployment.md`               | HIGH       |
 | HTTP/2                   | `http2.md`                    | MEDIUM     |
-| CORS & Security Headers  | `cors-security.md`           | HIGH       |
+| CORS & Security Headers  | `cors-security.md`            | HIGH       |
 | Delay Accepting Requests | `delay-accepting-requests.md` | HIGH       |
-| Database Integration    | `database-integration.md`     | HIGH       |
-| Database Migrations     | `database-migrations.md`      | HIGH       |
-| Test Containers         | `test-containers.md`          | HIGH       |
-| Clean Architecture      | `clean-architecture.md`       | HIGH       |
-| Unit Testing            | `unit-testing.md`             | HIGH       |
-| Performance             | `performance.md`              | HIGH       |
-| Rate Limiting           | `rate-limiting.md`            | HIGH       |
-| Serialization           | `serialization.md`            | HIGH       |
+| Database Integration     | `database-integration.md`     | HIGH       |
+| Database Migrations      | `database-migrations.md`      | HIGH       |
+| Test Containers          | `test-containers.md`          | HIGH       |
+| Clean Architecture       | `clean-architecture.md`       | HIGH       |
+| Unit Testing             | `unit-testing.md`             | HIGH       |
+| Performance              | `performance.md`              | HIGH       |
+| Rate Limiting            | `rate-limiting.md`            | HIGH       |
+| Serialization            | `serialization.md`            | HIGH       |
 
 When adding a new rule to this skill:
 
@@ -89,7 +89,7 @@ skills/
 
 ### SKILL.md Format
 
-````markdown
+```markdown
 ---
 name: { skill-name }
 description:
@@ -129,7 +129,7 @@ description:
 ## Reference
 
 {Links to official documentation}
-````
+```
 
 ### Rule File Format
 
@@ -220,4 +220,3 @@ cp -r skills/{skill-name} ~/.claude/skills/
 Add the skill to project knowledge or paste SKILL.md contents into the conversation.
 
 If the skill requires network access, instruct users to add required domains at `claude.ai/settings/capabilities`.
-

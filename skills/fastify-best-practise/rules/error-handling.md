@@ -85,11 +85,7 @@ server.get("/users/:id", async (request, reply) => {
 ```ts
 import createError from "@fastify/error";
 
-const UserNotFoundError = createError(
-  "USER_NOT_FOUND",
-  "User %s not found",
-  404,
-);
+const UserNotFoundError = createError("USER_NOT_FOUND", "User %s not found", 404);
 const InsufficientPermissionsError = createError(
   "INSUFFICIENT_PERMISSIONS",
   "You do not have permission to %s",
