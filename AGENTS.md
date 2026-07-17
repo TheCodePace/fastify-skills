@@ -48,6 +48,7 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | Type Providers           | `type-providers.md`          | HIGH       |
 | Deployment               | `deployment.md`              | HIGH       |
 | HTTP/2                   | `http2.md`                    | MEDIUM     |
+| CORS & Security Headers  | `cors-security.md`           | HIGH       |
 | Database Integration    | `database-integration.md`     | HIGH       |
 | Database Migrations     | `database-migrations.md`      | HIGH       |
 | Test Containers         | `test-containers.md`          | HIGH       |
