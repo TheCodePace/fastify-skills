@@ -42,6 +42,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Deployment               | [deployment.md](rules/deployment.md)                         | HIGH       | Graceful shutdown with `close-with-grace`, liveness/readiness probes, listen on `0.0.0.0`, `trustProxy`, multi-stage Dockerfile, AWS Lambda adapter            |
 | HTTP/2                   | [http2.md](rules/http2.md)                                   | MEDIUM     | Enable HTTP/2 over TLS (`h2`) with HTTP/1.1 fallback, or plain-text `h2c` for internal services; typed `buildServer` factory                                              |
 | CORS & Security Headers  | [cors-security.md](rules/cors-security.md)                   | HIGH       | `@fastify/cors` allow-list (static and dynamic), `@fastify/helmet` CSP/HSTS, registration order, combined security plugin                            |
+| Delay Accepting Requests | [delay-accepting-requests.md](rules/delay-accepting-requests.md) | HIGH   | Reject requests with 503 until dependencies are ready; liveness vs. readiness probes for Kubernetes                                                  |
 | Database Integration    | [database-integration.md](rules/database-integration.md)     | HIGH       | Register a `pg` pool as a Fastify plugin; use `@nearform/sql` for safe queries                                                                                     |
 | Database Migrations     | [database-migrations.md](rules/database-migrations.md)       | HIGH       | Run Postgrator SQL migrations at startup; never modify applied files                                                                                               |
 | Test Containers         | [test-containers.md](rules/test-containers.md)               | HIGH       | Spin up real Postgres containers with Testcontainers for integration tests                                                                                         |
@@ -71,6 +72,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Production deployment**: `deployment.md`, `delay-accepting-requests.md`, `configuration.md`
 - **Real-time / WebSockets**: `websockets.md`, `authentication.md`, `hooks-lifecycle.md`
 - **API gateway / proxying**: `http-proxy.md`, `hooks-lifecycle.md`, `error-handling.md`
+- **Startup / health checks**: `delay-accepting-requests.md`, `hooks-lifecycle.md`, `configuration.md`
 - **Performance tuning**: `performance.md`, `schema-validation-zod.md`
 - **Writing tests**: `testing.md`, `create-server.md`
 - **Database setup**: `database-integration.md`, `database-migrations.md`
