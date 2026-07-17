@@ -43,11 +43,10 @@ fastify.decorate("isReady", false);
 // 2. Reject requests that arrive before the server is ready
 fastify.addHook("onRequest", async (request, reply) => {
   if (!fastify.isReady) {
-    reply
+    return reply
       .status(503)
       .header("Retry-After", "5") // hint to clients and orchestrators
       .send({ error: "Service Unavailable", message: "Server is starting up" });
-    return reply;
   }
 });
 
@@ -119,10 +118,9 @@ fastify.get("/healthz", async () => {
 // Readiness — are all dependencies up? Returns 503 until ready
 fastify.get("/readyz", async (request, reply) => {
   if (!fastify.isReady) {
-    reply.status(503);
-    return { status: "not ready" };
+    return reply.status(503).send({ status: "not ready" });
   }
-  return { status: "ready" };
+  return reply.status(200).send({ status: "ready" });
 });
 
 // Skip the isReady gate for health-check routes
@@ -131,11 +129,10 @@ fastify.addHook("onRequest", async (request, reply) => {
     return; // allow health checks through
   }
   if (!fastify.isReady) {
-    reply
+    return reply
       .status(503)
       .header("Retry-After", "5")
       .send({ error: "Service Unavailable" });
-    return reply;
   }
 });
 
@@ -176,11 +173,10 @@ async function readinessPlugin(
   fastify.addHook("onRequest", async (request, reply) => {
     if (skip.has(request.routeOptions.url)) return;
     if (!fastify.isReady) {
-      reply
+      return reply
         .status(503)
         .header("Retry-After", "5")
         .send({ error: "Service Unavailable" });
-      return reply;
     }
   });
 
@@ -188,10 +184,9 @@ async function readinessPlugin(
 
   fastify.get("/readyz", async (request, reply) => {
     if (!fastify.isReady) {
-      reply.status(503);
-      return { status: "not ready" };
+      return reply.status(503).send({ status: "not ready" });
     }
-    return { status: "ready" };
+    return reply.status(200).send({ status: "ready" });
   });
 }
 
