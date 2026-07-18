@@ -16,9 +16,6 @@
     "type": "git",
     "url": "git+https://github.com/TheCodePace/fastify-skills.git"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "type": "module",
   "scripts": {
     "lint": "oxlint .",
