@@ -3,20 +3,8 @@ name: CI
 on:
   push:
     branches: [main]
-    paths:
-      - "skills/**/rules/**"
-      - "packages/validate-rules/**"
-      - "package.json"
-      - "pnpm-workspace.yaml"
-      - "pnpm-lock.yaml"
   pull_request:
     branches: [main]
-    paths:
-      - "skills/**/rules/**"
-      - "packages/validate-rules/**"
-      - "package.json"
-      - "pnpm-workspace.yaml"
-      - "pnpm-lock.yaml"
 
 # Cancel in-progress runs for the same ref so Dependabot PR re-pushes
 # don't pile up redundant CI runs.
