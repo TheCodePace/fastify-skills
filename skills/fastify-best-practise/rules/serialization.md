@@ -64,28 +64,12 @@ server.get(
 **Incorrect (duplicating schemas across routes):**
 
 ```ts
-server.get("/users/:id", {
-  schema: {
-    response: {
-      200: {
-        type: "object",
-        properties: {
-          id: { type: "string" },
-          name: { type: "string" },
-          email: { type: "string" },
-        },
-      },
-    },
-  },
-}, handler);
-
-server.get("/users", {
-  schema: {
-    response: {
-      200: {
-        type: "array",
-        items: {
-          // Same schema duplicated
+server.get(
+  "/users/:id",
+  {
+    schema: {
+      response: {
+        200: {
           type: "object",
           properties: {
             id: { type: "string" },
@@ -96,7 +80,31 @@ server.get("/users", {
       },
     },
   },
-}, handler);
+  handler,
+);
+
+server.get(
+  "/users",
+  {
+    schema: {
+      response: {
+        200: {
+          type: "array",
+          items: {
+            // Same schema duplicated
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              name: { type: "string" },
+              email: { type: "string" },
+            },
+          },
+        },
+      },
+    },
+  },
+  handler,
+);
 ```
 
 **Correct (register shared schemas with `addSchema` and reference with `$ref`):**
@@ -129,25 +137,33 @@ server.addSchema({
 });
 
 // Reference in routes
-server.get("/users/:id", {
-  schema: {
-    response: {
-      200: { $ref: "user#" },
-      404: { $ref: "error#" },
-    },
-  },
-}, handler);
-
-server.get("/users", {
-  schema: {
-    response: {
-      200: {
-        type: "array",
-        items: { $ref: "user#" },
+server.get(
+  "/users/:id",
+  {
+    schema: {
+      response: {
+        200: { $ref: "user#" },
+        404: { $ref: "error#" },
       },
     },
   },
-}, handler);
+  handler,
+);
+
+server.get(
+  "/users",
+  {
+    schema: {
+      response: {
+        200: {
+          type: "array",
+          items: { $ref: "user#" },
+        },
+      },
+    },
+  },
+  handler,
+);
 ```
 
 ### Multiple Status Code Schemas
@@ -155,36 +171,40 @@ server.get("/users", {
 **Correct (define schemas for specific and wildcard status codes):**
 
 ```ts
-server.get("/users/:id", {
-  schema: {
-    response: {
-      200: { $ref: "user#" },
-      404: { $ref: "error#" },
-      "4xx": {
-        type: "object",
-        properties: {
-          statusCode: { type: "integer" },
-          error: { type: "string" },
-          message: { type: "string" },
+server.get(
+  "/users/:id",
+  {
+    schema: {
+      response: {
+        200: { $ref: "user#" },
+        404: { $ref: "error#" },
+        "4xx": {
+          type: "object",
+          properties: {
+            statusCode: { type: "integer" },
+            error: { type: "string" },
+            message: { type: "string" },
+          },
         },
-      },
-      "5xx": {
-        type: "object",
-        properties: {
-          statusCode: { type: "integer" },
-          error: { type: "string" },
+        "5xx": {
+          type: "object",
+          properties: {
+            statusCode: { type: "integer" },
+            error: { type: "string" },
+          },
         },
       },
     },
   },
-}, async (request, reply) => {
-  const user = await db.findUser(request.params.id);
-  if (!user) {
-    reply.code(404);
-    return { statusCode: 404, error: "Not Found", message: "User not found" };
-  }
-  return user;
-});
+  async (request, reply) => {
+    const user = await db.findUser(request.params.id);
+    if (!user) {
+      reply.code(404);
+      return { statusCode: 404, error: "Not Found", message: "User not found" };
+    }
+    return user;
+  },
+);
 ```
 
 ### Custom Per-Route Serialization with `reply.serializer()`

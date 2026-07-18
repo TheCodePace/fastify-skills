@@ -176,10 +176,7 @@ Runs when an error is thrown during the request lifecycle. Use for custom error 
 ```ts
 fastify.addHook("onError", async (request, reply, error) => {
   // Runs before the error handler — use for side effects only
-  request.log.error(
-    { err: error, url: request.url, method: request.method },
-    "Request error",
-  );
+  request.log.error({ err: error, url: request.url, method: request.method }, "Request error");
 });
 ```
 
@@ -242,10 +239,7 @@ Runs when the request times out (connection timeout, not route timeout). Use to 
 
 ```ts
 fastify.addHook("onTimeout", async (request, reply) => {
-  request.log.warn(
-    { url: request.url, method: request.method },
-    "Request timed out",
-  );
+  request.log.warn({ url: request.url, method: request.method }, "Request timed out");
 });
 ```
 
@@ -297,9 +291,7 @@ Runs after the server has successfully bound to a port and is accepting connecti
 fastify.addHook("onListen", async () => {
   const address = fastify.server.address();
   const addr =
-    address && typeof address === "object"
-      ? `${address.address}:${address.port}`
-      : String(address);
+    address && typeof address === "object" ? `${address.address}:${address.port}` : String(address);
   fastify.log.info(`Server listening at ${addr}`);
 });
 ```
@@ -331,10 +323,7 @@ Runs synchronously each time a route is added. Use for introspection, documentat
 fastify.addHook("onRoute", (routeOptions) => {
   if (routeOptions.config?.auth === true) {
     const existing = routeOptions.preHandler ?? [];
-    routeOptions.preHandler = [
-      ...(Array.isArray(existing) ? existing : [existing]),
-      authHook,
-    ];
+    routeOptions.preHandler = [...(Array.isArray(existing) ? existing : [existing]), authHook];
   }
 });
 ```

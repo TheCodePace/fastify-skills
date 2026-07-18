@@ -62,11 +62,7 @@ server.register(cors, {
       return callback(null, true);
     }
 
-    const allowedOrigins = [
-      "https://example.com",
-      "https://app.example.com",
-      /\.example\.com$/,
-    ];
+    const allowedOrigins = ["https://example.com", "https://app.example.com", /\.example\.com$/];
 
     const isAllowed = allowedOrigins.some((allowed) =>
       allowed instanceof RegExp ? allowed.test(origin) : allowed === origin,
@@ -158,9 +154,7 @@ function buildServer(options = {}) {
   // 1. Security plugins — registered first
   server.register(helmet);
   server.register(cors, {
-    origin:
-      process.env.ALLOWED_ORIGINS?.split(",").map((s) => s.trim()) ||
-      ["https://example.com"],
+    origin: process.env.ALLOWED_ORIGINS?.split(",").map((s) => s.trim()) || ["https://example.com"],
     credentials: true,
   });
 
@@ -232,8 +226,7 @@ async function securityPlugin(fastify) {
   });
 
   await fastify.register(cors, {
-    origin:
-      process.env.ALLOWED_ORIGINS?.split(",").map((s) => s.trim()) || false,
+    origin: process.env.ALLOWED_ORIGINS?.split(",").map((s) => s.trim()) || false,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   });

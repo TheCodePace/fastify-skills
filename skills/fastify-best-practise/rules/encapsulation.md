@@ -134,19 +134,12 @@ interface CachePluginOptions {
 }
 
 export default fp(
-  async function cachePlugin(
-    fastify: FastifyInstance,
-    options: CachePluginOptions,
-  ) {
+  async function cachePlugin(fastify: FastifyInstance, options: CachePluginOptions) {
     // This plugin requires the db plugin to be registered
     fastify.decorate("cache", {
-      get: async (key) =>
-        fastify.db.query("SELECT value FROM cache WHERE key = $1", [key]),
+      get: async (key) => fastify.db.query("SELECT value FROM cache WHERE key = $1", [key]),
       set: async (key, value) =>
-        fastify.db.query("INSERT INTO cache (key, value) VALUES ($1, $2)", [
-          key,
-          value,
-        ]),
+        fastify.db.query("INSERT INTO cache (key, value) VALUES ($1, $2)", [key, value]),
     });
   },
   {

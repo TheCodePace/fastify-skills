@@ -23,8 +23,7 @@ Docker must be running on the test machine (locally and in CI).
 
 ```ts
 // WRONG: tests depend on external state — flaky, hard to reset, can't run in parallel
-process.env.DATABASE_URL =
-  "postgresql://user:pass@shared-db.example.com:5432/mydb";
+process.env.DATABASE_URL = "postgresql://user:pass@shared-db.example.com:5432/mydb";
 ```
 
 **Correct (isolated container per test suite):**

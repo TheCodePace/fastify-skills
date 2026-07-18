@@ -40,13 +40,10 @@ function validateRule(rule: Rule, file: string): ValidationError[] {
   if (!rule.examples || rule.examples.length === 0) {
     errors.push({
       file,
-      message:
-        "Missing examples (need at least one incorrect and one correct example)",
+      message: "Missing examples (need at least one incorrect and one correct example)",
     });
   } else {
-    const codeExamples = rule.examples.filter(
-      (e) => e.code && e.code.trim().length > 0,
-    );
+    const codeExamples = rule.examples.filter((e) => e.code && e.code.trim().length > 0);
 
     const hasIncorrect = codeExamples.some(
       (e) =>
@@ -76,9 +73,7 @@ function validateRule(rule: Rule, file: string): ValidationError[] {
   if (!VALID_IMPACTS.includes(rule.impact)) {
     errors.push({
       file,
-      message: `Invalid impact level: ${
-        rule.impact
-      }. Must be one of: ${VALID_IMPACTS.join(", ")}`,
+      message: `Invalid impact level: ${rule.impact}. Must be one of: ${VALID_IMPACTS.join(", ")}`,
     });
   }
 
@@ -98,9 +93,7 @@ async function validate() {
       console.log(`Rules directory: ${config.rulesDir}`);
 
       const files = await readdir(config.rulesDir);
-      const ruleFiles = files.filter(
-        (f) => f.endsWith(".md") && !f.startsWith("_"),
-      );
+      const ruleFiles = files.filter((f) => f.endsWith(".md") && !f.startsWith("_"));
       totalFiles += ruleFiles.length;
 
       for (const file of ruleFiles) {
@@ -112,9 +105,7 @@ async function validate() {
         } catch (error) {
           allErrors.push({
             file: `${skillName}/${file}`,
-            message: `Failed to parse: ${
-              error instanceof Error ? error.message : String(error)
-            }`,
+            message: `Failed to parse: ${error instanceof Error ? error.message : String(error)}`,
           });
         }
       }

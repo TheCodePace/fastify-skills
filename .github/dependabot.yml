@@ -1,13 +1,29 @@
 version: 2
 updates:
-  - package-ecosystem: 'npm'
-    directory: '/'
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: 'daily'
-      time: '01:00'
-      timezone: 'Europe/London'
-    versioning-strategy: 'increase'
+      interval: "daily"
+      time: "01:00"
+      timezone: "Europe/London"
+    versioning-strategy: "increase"
     commit-message:
-      prefix: 'chore'
-      include: 'scope'
+      prefix: "chore"
+      include: "scope"
     open-pull-requests-limit: 20
+    labels:
+      - "dependencies"
+    # Split Dependabot PRs by semver class so each PR contains only one
+    # kind of update. This lets the automerge workflow in
+    # .github/workflows/automerge.yml decide patch/minor vs major with a
+    # single, unambiguous PR-body check.
+    groups:
+      patch-and-minor:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+      major:
+        applies-to: version-updates
+        update-types:
+          - "major"

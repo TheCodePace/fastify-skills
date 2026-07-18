@@ -163,10 +163,7 @@ app.get(
 
 ```ts
 import fp from "fastify-plugin";
-import {
-  serializerCompiler,
-  validatorCompiler,
-} from "fastify-type-provider-zod";
+import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
 export default fp(
   async function zodPlugin(fastify) {
@@ -187,10 +184,7 @@ When using the Zod plugin registered globally, type your route plugins with `Fas
 
 ```ts
 import fp from "fastify-plugin";
-import {
-  serializerCompiler,
-  validatorCompiler,
-} from "fastify-type-provider-zod";
+import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 
 export default fp(
   async function zodPlugin(fastify) {
@@ -271,9 +265,7 @@ const userRoutes: FastifyPluginAsyncZod = async function (fastify) {
       // request.params.id is typed as string
       const user = await findUser(request.params.id);
       if (!user) {
-        throw fastify.httpErrors.notFound(
-          `User ${request.params.id} not found`,
-        );
+        throw fastify.httpErrors.notFound(`User ${request.params.id} not found`);
       }
       return user;
     },
@@ -348,12 +340,7 @@ export const userParamsSchema = z.object({
 ```ts
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { paginationSchema } from "../../schemas/shared.js";
-import {
-  userSchema,
-  createUserSchema,
-  updateUserSchema,
-  userParamsSchema,
-} from "./schema.js";
+import { userSchema, createUserSchema, updateUserSchema, userParamsSchema } from "./schema.js";
 
 const userRoutes: FastifyPluginAsyncZod = async function (fastify) {
   fastify.get(
@@ -396,9 +383,7 @@ const userRoutes: FastifyPluginAsyncZod = async function (fastify) {
     async (request) => {
       const user = await findUser(request.params.id);
       if (!user) {
-        throw fastify.httpErrors.notFound(
-          `User ${request.params.id} not found`,
-        );
+        throw fastify.httpErrors.notFound(`User ${request.params.id} not found`);
       }
       return user;
     },

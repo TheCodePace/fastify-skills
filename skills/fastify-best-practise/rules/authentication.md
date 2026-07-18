@@ -117,13 +117,9 @@ server.get("/profile", async (request, reply) => {
 
 ```ts
 async function userRoutes(fastify) {
-  fastify.get(
-    "/profile",
-    { preHandler: [fastify.authenticate] },
-    async (request) => {
-      return getUserProfile(request.user.id);
-    },
-  );
+  fastify.get("/profile", { preHandler: [fastify.authenticate] }, async (request) => {
+    return getUserProfile(request.user.id);
+  });
 }
 
 export default userRoutes;
@@ -216,10 +212,7 @@ const authRoutes: FastifyPluginAsyncZod = async function (fastify) {
         return { error: "Invalid credentials" };
       }
 
-      const token = fastify.jwt.sign(
-        { id: user.id, role: user.role },
-        { expiresIn: "1h" },
-      );
+      const token = fastify.jwt.sign({ id: user.id, role: user.role }, { expiresIn: "1h" });
       return { token };
     },
   );
@@ -286,10 +279,7 @@ async function authPlugin(fastify) {
     request.user = { type: "api-key" };
   });
 
-  fastify.decorate(
-    "verifyJwtOrApiKey",
-    fastify.auth([fastify.authenticate, fastify.verifyApiKey]),
-  );
+  fastify.decorate("verifyJwtOrApiKey", fastify.auth([fastify.authenticate, fastify.verifyApiKey]));
 }
 
 export default fp(authPlugin, {
@@ -303,13 +293,9 @@ export default fp(authPlugin, {
 
 ```ts
 async function dataRoutes(fastify) {
-  fastify.get(
-    "/",
-    { preHandler: [fastify.verifyJwtOrApiKey] },
-    async (request) => {
-      return getData(request.user);
-    },
-  );
+  fastify.get("/", { preHandler: [fastify.verifyJwtOrApiKey] }, async (request) => {
+    return getData(request.user);
+  });
 }
 
 export default dataRoutes;
@@ -326,18 +312,9 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 
 declare module "fastify" {
   interface FastifyInstance {
-    authenticate: (
-      request: FastifyRequest,
-      reply: FastifyReply,
-    ) => Promise<void>;
-    verifyApiKey: (
-      request: FastifyRequest,
-      reply: FastifyReply,
-    ) => Promise<void>;
-    verifyJwtOrApiKey: (
-      request: FastifyRequest,
-      reply: FastifyReply,
-    ) => Promise<void>;
+    authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    verifyApiKey: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    verifyJwtOrApiKey: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   }
 }
 

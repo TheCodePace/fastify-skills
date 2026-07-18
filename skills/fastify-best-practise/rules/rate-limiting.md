@@ -253,22 +253,14 @@ await server.register(rateLimit, {
 });
 
 // Disable rate limit on health check route
-server.get(
-  "/health",
-  { config: { rateLimit: false } },
-  async () => {
-    return { status: "ok" };
-  },
-);
+server.get("/health", { config: { rateLimit: false } }, async () => {
+  return { status: "ok" };
+});
 
 // Disable rate limit on readiness probe
-server.get(
-  "/ready",
-  { config: { rateLimit: false } },
-  async () => {
-    return { status: "ready" };
-  },
-);
+server.get("/ready", { config: { rateLimit: false } }, async () => {
+  return { status: "ready" };
+});
 ```
 
 Reference: [@fastify/rate-limit](https://github.com/fastify/fastify-rate-limit) | [Fastify Ecosystem](https://fastify.dev/docs/latest/Guides/Ecosystem/)

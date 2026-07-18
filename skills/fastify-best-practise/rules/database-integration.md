@@ -97,16 +97,12 @@ import SQL from "@nearform/sql";
 import type pg from "pg";
 
 function getUsers(db: pg.Pool) {
-  const { rows } = await db.query(
-    SQL`SELECT id, name, email FROM users ORDER BY created_at DESC`,
-  );
+  const { rows } = await db.query(SQL`SELECT id, name, email FROM users ORDER BY created_at DESC`);
   return rows;
 }
 
 function getUserById(db: pg.Pool, id: string) {
-  const { rows } = await db.query(
-    SQL`SELECT id, name, email FROM users WHERE id = ${id}`,
-  );
+  const { rows } = await db.query(SQL`SELECT id, name, email FROM users WHERE id = ${id}`);
   return rows[0];
 }
 

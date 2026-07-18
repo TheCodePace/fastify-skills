@@ -18,8 +18,16 @@ import createError from "@fastify/error";
 import SQL from "@nearform/sql";
 import type pg from "pg";
 
-export interface User { id: string; name: string; email: string; }
-export interface CreateUserInput { name: string; email: string; password: string; }
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+export interface CreateUserInput {
+  name: string;
+  email: string;
+  password: string;
+}
 
 const EmailAlreadyRegisteredError = createError(
   "EMAIL_ALREADY_REGISTERED",
@@ -135,7 +143,7 @@ describe("createUser", () => {
     const db = {
       query: async () => {
         callCount++;
-        if (callCount === 1) return { rows: [] };                   // SELECT
+        if (callCount === 1) return { rows: [] }; // SELECT
         return { rows: [{ id: "u1", name: "Alice", email: "alice@example.com" }] }; // INSERT
       },
     } as unknown as pg.Pool;
@@ -177,13 +185,13 @@ test/
 
 ### What to Unit-test vs Integration-test
 
-| What you want to verify                            | Test type        |
-| -------------------------------------------------- | ---------------- |
-| Business rule (e.g. duplicate email check)         | Unit test        |
-| Input normalisation (trim, lower-case)             | Unit test        |
-| Error type and status code thrown by service       | Unit test        |
-| HTTP status code returned by the route             | Integration test |
-| Request schema validation (400 for bad body)       | Integration test |
-| End-to-end database reads/writes                   | Integration test (+ Testcontainers) |
+| What you want to verify                      | Test type                           |
+| -------------------------------------------- | ----------------------------------- |
+| Business rule (e.g. duplicate email check)   | Unit test                           |
+| Input normalisation (trim, lower-case)       | Unit test                           |
+| Error type and status code thrown by service | Unit test                           |
+| HTTP status code returned by the route       | Integration test                    |
+| Request schema validation (400 for bad body) | Integration test                    |
+| End-to-end database reads/writes             | Integration test (+ Testcontainers) |
 
 Reference: [Vitest](https://vitest.dev/) | [node:test](https://nodejs.org/api/test.html) | [clean-architecture.md](clean-architecture.md)

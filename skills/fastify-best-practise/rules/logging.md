@@ -207,14 +207,14 @@ server.get("/health", { logLevel: "silent" }, async () => {
 
 ### Log at the Right Level
 
-| Level   | Use case                                                           |
-| ------- | ------------------------------------------------------------------ |
-| `trace` | Very detailed internal flow (disable in production)               |
-| `debug` | Diagnostic information useful during development                  |
-| `info`  | Normal application events (request received, service started)     |
-| `warn`  | Unexpected but recoverable situations                             |
-| `error` | Errors that require attention but don't crash the process         |
-| `fatal` | Unrecoverable errors — process should exit                        |
+| Level   | Use case                                                      |
+| ------- | ------------------------------------------------------------- |
+| `trace` | Very detailed internal flow (disable in production)           |
+| `debug` | Diagnostic information useful during development              |
+| `info`  | Normal application events (request received, service started) |
+| `warn`  | Unexpected but recoverable situations                         |
+| `error` | Errors that require attention but don't crash the process     |
+| `fatal` | Unrecoverable errors — process should exit                    |
 
 ```ts
 server.get("/payments", async (request, reply) => {
