@@ -1,4 +1,15 @@
 version: 2
+
+# -------------------------------------------------------------------------
+# Group design (used by both ecosystems below)
+#
+# We split Dependabot PRs by semver class so each PR contains only one kind
+# of update. This lets .github/workflows/automerge.yml — which inspects
+# the PR body for `update-type: version-update:semver-major` — decide
+# patch/minor vs major with a single, unambiguous match. Majors are kept
+# for human review; patch+minor are auto-merged.
+# -------------------------------------------------------------------------
+
 updates:
   - package-ecosystem: "npm"
     directory: "/"
@@ -13,10 +24,36 @@ updates:
     open-pull-requests-limit: 20
     labels:
       - "dependencies"
-    # Split Dependabot PRs by semver class so each PR contains only one
-    # kind of update. This lets the automerge workflow in
-    # .github/workflows/automerge.yml decide patch/minor vs major with a
-    # single, unambiguous PR-body check.
+    groups:
+      patch-and-minor:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+      major:
+        applies-to: version-updates
+        update-types:
+          - "major"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    # Action releases are infrequent; weekly is plenty and reduces noise.
+    schedule:
+      interval: "weekly"
+      time: "01:00"
+      timezone: "Europe/London"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    # Default is 5 for version updates; actions don't update often so this
+    # is sufficient.
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    # Mirror the npm groups so the automerge rule (which keys off the PR
+    # body's `update-type: version-update:semver-major`) keeps working
+    # unchanged for action PRs.
     groups:
       patch-and-minor:
         applies-to: version-updates
