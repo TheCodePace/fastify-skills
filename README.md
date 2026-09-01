@@ -31,6 +31,7 @@ Apply Fastify best practices when creating servers, plugins, routes, schemas, ho
 | Multipart & File Uploads | HIGH       | File uploads with `@fastify/multipart`, streaming, size limits, MIME validation                                                                     |
 | WebSockets               | HIGH       | Real-time bidirectional connections with `@fastify/websocket`, lifecycle handling, broadcasting, and authentication                                 |
 | HTTP Proxy               | HIGH       | API gateway / BFF patterns with `@fastify/http-proxy` and `@fastify/reply-from`, auth hooks, error handling, multi-upstream routing                 |
+| HTTP QUERY Method        | HIGH       | Native RFC 10008 `QUERY` routes in Fastify 5.11+; body and media-type validation, safe/idempotent handlers, caching and CORS constraints            |
 | Type Providers           | HIGH       | Compare TypeBox, `json-schema-to-ts`, and Zod providers; `.withTypeProvider<T>()`; scoped providers in plugins                                      |
 | Deployment               | HIGH       | Graceful shutdown with `close-with-grace`, liveness/readiness probes, listen on `0.0.0.0`, `trustProxy`, multi-stage Dockerfile, AWS Lambda adapter |
 | HTTP/2                   | MEDIUM     | Enable HTTP/2 over TLS (`h2`) with HTTP/1.1 fallback, or plain-text `h2c` for internal services                                                     |

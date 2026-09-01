@@ -45,6 +45,7 @@ Rules are stored in `skills/fastify-best-practise/rules/`:
 | Multipart & File Uploads | `multipart.md`                | HIGH       |
 | WebSockets               | `websockets.md`               | HIGH       |
 | HTTP Proxy               | `http-proxy.md`               | HIGH       |
+| HTTP QUERY Method        | `http-query.md`               | HIGH       |
 | Type Providers           | `type-providers.md`           | HIGH       |
 | Deployment               | `deployment.md`               | HIGH       |
 | HTTP/2                   | `http2.md`                    | MEDIUM     |
