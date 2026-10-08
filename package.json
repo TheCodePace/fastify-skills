@@ -24,7 +24,7 @@
     "format:check": "oxfmt --check .",
     "validate": "pnpm --filter @thecodepace/validate-rules validate",
     "version": "changeset version",
-    "release": "changeset tag"
+    "release": "changeset git-tag"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
