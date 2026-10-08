@@ -38,6 +38,7 @@ The rules are organized by topic in the `rules/` directory. Each rule follows a 
 | Multipart & File Uploads | [multipart.md](rules/multipart.md)                               | HIGH       | File uploads with `@fastify/multipart`, streaming, size limits, MIME validation                                                                            |
 | WebSockets               | [websockets.md](rules/websockets.md)                             | HIGH       | Real-time bidirectional connections with `@fastify/websocket`, lifecycle handling, broadcasting, and authentication                                        |
 | HTTP Proxy               | [http-proxy.md](rules/http-proxy.md)                             | HIGH       | API gateway / BFF patterns with `@fastify/http-proxy` and `@fastify/reply-from`, auth hooks, error handling, multi-upstream routing                        |
+| HTTP QUERY Method        | [http-query.md](rules/http-query.md)                             | HIGH       | Native RFC 10008 `QUERY` routes in Fastify 5.11+; body and media-type validation, safe/idempotent handlers, caching and CORS constraints                   |
 | Type Providers           | [type-providers.md](rules/type-providers.md)                     | HIGH       | Compare TypeBox, `json-schema-to-ts`, and Zod providers; `.withTypeProvider<T>()`; scoped providers in plugins; provider-specific plugin types             |
 | Deployment               | [deployment.md](rules/deployment.md)                             | HIGH       | Graceful shutdown with `close-with-grace`, liveness/readiness probes, listen on `0.0.0.0`, `trustProxy`, multi-stage Dockerfile, AWS Lambda adapter        |
 | HTTP/2                   | [http2.md](rules/http2.md)                                       | MEDIUM     | Enable HTTP/2 over TLS (`h2`) with HTTP/1.1 fallback, or plain-text `h2c` for internal services; typed `buildServer` factory                               |
@@ -79,6 +80,7 @@ When generating Fastify code, read the relevant rule file(s) for the topic and a
 - **Integration tests with a real DB**: `test-containers.md`, `testing.md`
 - **Clean separation of concerns**: `clean-architecture.md`, `unit-testing.md`
 - **Unit testing business logic**: `unit-testing.md`, `clean-architecture.md`
+- **Body-bearing safe queries (QUERY method)**: `http-query.md`, `schema-validation-zod.md`, `cors-security.md`
 - **Response serialization**: `serialization.md`, `serialization-zod.md`, `schema-validation-zod.md`
 
 ## Recommended Project Structure
@@ -133,6 +135,7 @@ When applying these best practices, mention which rule(s) you followed:
 > - **Migrations**: Applied via Postgrator (`runMigrations()`) before server starts; raw SQL files tracked in git
 > - **Clean architecture**: Business logic in pure service functions; route handlers stay thin
 > - **Unit tests**: Service functions tested in isolation with mock db stubs
+> - **HTTP QUERY method**: Native Fastify 5.11+ RFC 10008 route — body and media-type validation, safe/idempotent handler, body-aware cache key, optional discovery/resource headers, and CORS preflight support
 > - **Integration tests**: Real Postgres container via Testcontainers
 
 ## Reference
